@@ -1,0 +1,10 @@
+print(5+5);
+print(5+5.5);
+print(5+true);
+print(5+" hola");
+print(5.5+5);
+print(5.5+5.5);
+print(5.5+true);
+print(5.5+" hola");
+print(true+5);
+print(true+5.45);
