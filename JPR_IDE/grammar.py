@@ -39,6 +39,7 @@ tokens  = [
     'POR',
     'DIV',
     'MOD',
+    'POT',
     'MENORQUE',
     'MAYORQUE',
     'IGUALIGUAL',
@@ -50,7 +51,10 @@ tokens  = [
     'CADENA',
     'BOOLEANO',
     'CARACTER',
-    'ID'
+    'ID',
+    'DIFERENTE',
+    'MAYORIGUAL',
+    'MENORIGUAL',
 ] + list(reservadas.values())
 
 # Tokens
@@ -59,12 +63,16 @@ t_PARA          = r'\('
 t_PARC          = r'\)'
 t_MAS           = r'\+'
 t_MENOS         = r'-'
-t_POR         = r'\*'
-t_DIV         = r'/'
-t_MOD         = r'%'
+t_POR           = r'\*'
+t_DIV           = r'/'
+t_MOD           = r'%'
+t_POT           = r'\*\*'
 t_MENORQUE      = r'<'
 t_MAYORQUE      = r'>'
 t_IGUALIGUAL    = r'=='
+t_DIFERENTE     = r'=!'
+t_MENORIGUAL    = r'<='
+t_MAYORIGUAL    = r'>='
 t_AND           = r'&&'
 t_OR            = r'\|\|'
 t_NOT           = r'!'
@@ -148,8 +156,9 @@ precedence = (
     ('left','MENORQUE','MAYORQUE', 'IGUALIGUAL'),
     ('left','MAS','MENOS'),
     ('left', 'POR', 'DIV', 'MOD'),
+    ('nonassoc', 'POT'),
     ('right','UMENOS'),
-    )
+)
 
 
 
@@ -207,10 +216,14 @@ def p_expresion_binaria(t):
             | expresion MENOS expresion
             | expresion POR expresion
             | expresion DIV expresion
+            | expresion POT expresion
             | expresion MOD expresion
             | expresion MENORQUE expresion
             | expresion MAYORQUE expresion
             | expresion IGUALIGUAL expresion
+            | expresion DIFERENTE expresion
+            | expresion MENORIGUAL expresion
+            | expresion MAYORIGUAL expresion
             | expresion AND expresion
             | expresion OR expresion
     '''
@@ -222,12 +235,20 @@ def p_expresion_binaria(t):
         t[0] = Aritmetica(OperadorAritmetico.POR, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
     elif t[2] == '/':
         t[0] = Aritmetica(OperadorAritmetico.DIV, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
+    elif t[2] == '**':
+        t[0] = Aritmetica(OperadorAritmetico.POT, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
     elif t[2] == '%':
         t[0] = Aritmetica(OperadorAritmetico.MOD, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))    
     elif t[2] == '<':
         t[0] = Relacional(OperadorRelacional.MENORQUE, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
     elif t[2] == '>':
         t[0] = Relacional(OperadorRelacional.MAYORQUE, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
+    elif t[2] == '<=':
+        t[0] = Relacional(OperadorRelacional.MENORIGUAL, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
+    elif t[2] == '>=':
+        t[0] = Relacional(OperadorRelacional.MAYORIGUAL, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
+    elif t[2] == '=!':
+        t[0] = Relacional(OperadorRelacional.DIFERENTE, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
     elif t[2] == '==':
         t[0] = Relacional(OperadorRelacional.IGUALIGUAL, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
     elif t[2] == '&&':
