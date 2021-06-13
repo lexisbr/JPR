@@ -8,6 +8,7 @@ reservadas = {
     'boolean': 'RBOOLEAN',
     'char': 'RCHAR',
     'string': 'RSTRING',
+    'var': 'RVAR',
     'null': 'RNULL',
     'print' : 'RPRINT',
     'if': 'RIF',
@@ -128,6 +129,11 @@ def t_CARACTER(t):
     t.value = t.value[1:-1] # remuevo las comillas 
     return t
 
+# Comentario multilinea // ...
+def t_COMENTARIO_MULTILINEA(t):
+    r'\#\*(.|\n)*\*\#'
+    t.lexer.lineno += t.value.count('\n')
+
 # Comentario simple // ...
 def t_COMENTARIO_SIMPLE(t):
     r'\#.*\n'
@@ -210,6 +216,7 @@ def p_instrucciones_instruccion(t) :
 def p_instruccion(t) :
     '''instruccion      : imprimir_instr finins
                         | declaracion_instr finins
+                        | declaracion_instr2 finins
                         | asignacion_instr finins 
                         | if_instr 
                         | while_instr 
@@ -236,6 +243,12 @@ def p_imprimir(t) :
 def p_declaracion(t) :
     'declaracion_instr     : tipo ID IGUAL expresion'
     t[0] = Declaracion(t[1], t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
+
+#///////////////////////////////////////DECLARACION NULA//////////////////////////////////////////////////
+
+def p_declaracion_nula(t) :
+    'declaracion_instr2     : tipo ID'
+    t[0] = Declaracion(t[1], t[2], t.lineno(2), find_column(input, t.slice[2]), None)
 
 #///////////////////////////////////////ASIGNACION//////////////////////////////////////////////////
 
@@ -275,7 +288,9 @@ def p_tipo(t) :
     '''tipo     : RINT
                 | RDOUBLE
                 | RSTRING
-                | RBOOLEAN'''
+                | RBOOLEAN
+                | RCHAR
+                | RVAR  '''
     if t[1] == 'int':
         t[0] = TIPO.ENTERO
     elif t[1] == 'double':
@@ -284,6 +299,8 @@ def p_tipo(t) :
         t[0] = TIPO.CADENA
     elif t[1] == 'boolean':
         t[0] = TIPO.BOOLEANO 
+    elif t[1] == 'var':
+        t[0] = TIPO.VAR 
 
 
 #///////////////////////////////////////EXPRESION//////////////////////////////////////////////////
@@ -372,7 +389,11 @@ def p_primitivo_booleano(t):
     
 def p_primitivo_caracter(t):
     '''expresion : CARACTER'''
-    t[0] = Primitivos(TIPO.CARACTER,str(t[1]), t.lineno(1), find_column(input, t.slice[1]))    
+    t[0] = Primitivos(TIPO.CARACTER,str(t[1]), t.lineno(1), find_column(input, t.slice[1]))
+
+def p_expresion_null(t):
+    '''expresion : RNULL'''
+    t[0] = Primitivos(TIPO.NULO,None, t.lineno(1), find_column(input, t.slice[1]))
 
 import ply.yacc as yacc
 parser = yacc.yacc()
@@ -409,14 +430,15 @@ def interfaz(archivo):
         ast.getExcepciones().append(error)
         ast.updateConsola(error.toString())
 
-    for instruccion in ast.getInstrucciones():      # REALIZAR LAS ACCIONES
-        value = instruccion.interpretar(ast,TSGlobal)
-        if isinstance(value, Excepcion) :
-            ast.getExcepciones().append(value)
-            ast.updateConsola(value.toString())
-        if isinstance(value, Break): 
-            err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
-            ast.getExcepciones().append(err)
-            ast.updateConsola(err.toString())
+    if ast.getInstrucciones()!=None:
+        for instruccion in ast.getInstrucciones():      # REALIZAR LAS ACCIONES
+            value = instruccion.interpretar(ast,TSGlobal)
+            if isinstance(value, Excepcion) :
+                ast.getExcepciones().append(value)
+                ast.updateConsola(value.toString())
+            if isinstance(value, Break): 
+                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                ast.getExcepciones().append(err)
+                ast.updateConsola(err.toString())
 
     return ast.getConsola()
