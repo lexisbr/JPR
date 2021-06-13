@@ -43,6 +43,7 @@ tokens  = [
     'MENORQUE',
     'MAYORQUE',
     'IGUALIGUAL',
+    'IGUAL',
     'AND',
     'OR',
     'NOT',
@@ -70,6 +71,7 @@ t_POT           = r'\*\*'
 t_MENORQUE      = r'<'
 t_MAYORQUE      = r'>'
 t_IGUALIGUAL    = r'=='
+t_IGUAL         = r'='
 t_DIFERENTE     = r'=!'
 t_MENORIGUAL    = r'<='
 t_MAYORIGUAL    = r'>='
@@ -172,6 +174,9 @@ from TS.Tipo import OperadorAritmetico,OperadorLogico,OperadorRelacional, TIPO
 from Expresiones.Aritmetica import Aritmetica
 from Expresiones.Relacional import Relacional
 from Expresiones.Logica import Logica
+from Instrucciones.Declaracion import Declaracion
+from Expresiones.Identificador import Identificador
+from Instrucciones.Asignacion import Asignacion
 
 def p_init(t) :
     'init            : instrucciones'
@@ -195,8 +200,15 @@ def p_instrucciones_instruccion(t) :
 #///////////////////////////////////////INSTRUCCION//////////////////////////////////////////////////
 
 def p_instruccion(t) :
-    '''instruccion      : imprimir_instr'''
+    '''instruccion      : imprimir_instr finins
+                        | declaracion_instr finins
+                        | asignacion_instr finins '''
     t[0] = t[1]
+
+def p_finins(t) :
+    '''finins       : PUNTOCOMA
+                    | '''
+    t[0] = None
 
 def p_instruccion_error(t):
     'instruccion        : error PUNTOCOMA'
@@ -205,8 +217,34 @@ def p_instruccion_error(t):
 #///////////////////////////////////////IMPRIMIR//////////////////////////////////////////////////
 
 def p_imprimir(t) :
-    'imprimir_instr     : RPRINT PARA expresion PARC PUNTOCOMA'
+    'imprimir_instr     : RPRINT PARA expresion PARC'
     t[0] = Imprimir(t[3], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////DECLARACION//////////////////////////////////////////////////
+
+def p_declaracion(t) :
+    'declaracion_instr     : tipo ID IGUAL expresion'
+    t[0] = Declaracion(t[1], t[2], t.lineno(2), find_column(input, t.slice[2]), t[4])
+
+#///////////////////////////////////////ASIGNACION//////////////////////////////////////////////////
+
+def p_asignacion(t) :
+    'asignacion_instr     : ID IGUAL expresion'
+    t[0] = Asignacion(t[1], t[3], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////TIPO//////////////////////////////////////////////////
+
+def p_tipo(t) :
+    '''tipo     : RINT
+                | RDOUBLE
+                | RSTRING '''
+    if t[1] == 'int':
+        t[0] = TIPO.ENTERO
+    elif t[1] == 'double':
+        t[0] = TIPO.DECIMAL
+    elif t[1] == 'string':
+        t[0] = TIPO.CADENA
+
 
 #///////////////////////////////////////EXPRESION//////////////////////////////////////////////////
 
@@ -272,6 +310,10 @@ def p_expresion_agrupacion(t):
     '''
     t[0] = t[2]
 
+def p_expresion_identificador(t):
+    '''expresion : ID'''
+    t[0] = Identificador(t[1], t.lineno(1), find_column(input, t.slice[1]))
+
 def p_expresion_entero(t):
     '''expresion : ENTERO'''
     t[0] = Primitivos(TIPO.ENTERO,t[1], t.lineno(1), find_column(input, t.slice[1]))
@@ -319,7 +361,7 @@ def interfaz(archivo):
     from TS.Arbol import Arbol
     from TS.TablaSimbolos import TablaSimbolos
 
-    instrucciones = parse(entrada) #ARBOL AST
+    instrucciones = parse(entrada.lower()) #ARBOL AST
     ast = Arbol(instrucciones)
     TSGlobal = TablaSimbolos()
     ast.setTSglobal(TSGlobal)

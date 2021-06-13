@@ -10,10 +10,10 @@ class TablaSimbolos:
         self.funciones = []
 
     def setTabla(self, simbolo):      # Agregar una variable
-        if simbolo.id in self.tabla :
+        if simbolo.id.lower() in self.tabla :
             return Excepcion("Semantico", "Variable " + simbolo.id + " ya existe", simbolo.fila, simbolo.columna)
         else:
-            self.tabla[simbolo.id] = simbolo
+            self.tabla[simbolo.id.lower()] = simbolo
             return None
 
     def getTabla(self, id):            # obtener una variable
@@ -29,11 +29,13 @@ class TablaSimbolos:
         tablaActual = self
         while tablaActual != None:
             if simbolo.id in self.tabla :
-                self.tabla[simbolo.id].setValor(simbolo.getValor())
-                self.tabla[simbolo.id].setTipo(simbolo.getTipo())
-                return "Variable Actualizada"
+                if self.tabla[simbolo.id].getTipo() == simbolo.getTipo():
+                    self.tabla[simbolo.id].setValor(simbolo.getValor())
+                    self.tabla[simbolo.id].setTipo(simbolo.getTipo())
+                    return None             #VARIABLE ACTUALIZADA
+                return Excepcion("Semantico", "Tipo de dato Diferente en Asignacion", simbolo.getFila(), simbolo.getColumna())
             else:
                 tablaActual = tablaActual.anterior
-        return None
+        return Excepcion("Semantico", "Variable No encontrada en Asignacion", simbolo.getFila(), simbolo.getColumna())
         
     
