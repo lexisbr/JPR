@@ -1,3 +1,4 @@
+import re
 from TS.Excepcion import Excepcion
 
 errores = []
@@ -56,6 +57,8 @@ tokens  = [
     'DIFERENTE',
     'MAYORIGUAL',
     'MENORIGUAL',
+    'LLAVEA',
+    'LLAVEC',
 ] + list(reservadas.values())
 
 # Tokens
@@ -78,6 +81,8 @@ t_MAYORIGUAL    = r'>='
 t_AND           = r'&&'
 t_OR            = r'\|\|'
 t_NOT           = r'!'
+t_LLAVEA        = r'{'
+t_LLAVEC        = r'}'
 
 def t_DECIMAL(t):
     r'\d+\.\d+'
@@ -148,7 +153,7 @@ def find_column(inp, token):
 
 # Construyendo el analizador léxico
 import ply.lex as lex
-lexer = lex.lex()
+lexer = lex.lex(reflags= re.IGNORECASE)
 
 # Asociación de operadores y precedencia
 precedence = (
@@ -177,6 +182,9 @@ from Expresiones.Logica import Logica
 from Instrucciones.Declaracion import Declaracion
 from Expresiones.Identificador import Identificador
 from Instrucciones.Asignacion import Asignacion
+from Instrucciones.If import If
+from Instrucciones.While import While
+from Instrucciones.Break import Break
 
 def p_init(t) :
     'init            : instrucciones'
@@ -202,7 +210,10 @@ def p_instrucciones_instruccion(t) :
 def p_instruccion(t) :
     '''instruccion      : imprimir_instr finins
                         | declaracion_instr finins
-                        | asignacion_instr finins '''
+                        | asignacion_instr finins 
+                        | if_instr 
+                        | while_instr 
+                        | break_instr finins '''
     t[0] = t[1]
 
 def p_finins(t) :
@@ -232,18 +243,47 @@ def p_asignacion(t) :
     'asignacion_instr     : ID IGUAL expresion'
     t[0] = Asignacion(t[1], t[3], t.lineno(1), find_column(input, t.slice[1]))
 
+#///////////////////////////////////////IF//////////////////////////////////////////////////
+
+def p_if1(t) :
+    'if_instr     : RIF PARA expresion PARC LLAVEA instrucciones LLAVEC'
+    t[0] = If(t[3], t[6], None, None, t.lineno(1), find_column(input, t.slice[1]))
+
+def p_if2(t) :
+    'if_instr     : RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC'
+    t[0] = If(t[3], t[6], t[10], None, t.lineno(1), find_column(input, t.slice[1]))
+
+def p_if3(t) :
+    'if_instr     : RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr'
+    t[0] = If(t[3], t[6], None, t[9], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////WHILE//////////////////////////////////////////////////
+
+def p_while(t) :
+    'while_instr     : RWHILE PARA expresion PARC LLAVEA instrucciones LLAVEC'
+    t[0] = While(t[3], t[6], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////BREAK//////////////////////////////////////////////////
+
+def p_break(t) :
+    'break_instr     : RBREAK'
+    t[0] = Break(t.lineno(1), find_column(input, t.slice[1]))
+
 #///////////////////////////////////////TIPO//////////////////////////////////////////////////
 
 def p_tipo(t) :
     '''tipo     : RINT
                 | RDOUBLE
-                | RSTRING '''
+                | RSTRING
+                | RBOOLEAN'''
     if t[1] == 'int':
         t[0] = TIPO.ENTERO
     elif t[1] == 'double':
         t[0] = TIPO.DECIMAL
     elif t[1] == 'string':
         t[0] = TIPO.CADENA
+    elif t[1] == 'boolean':
+        t[0] = TIPO.BOOLEANO 
 
 
 #///////////////////////////////////////EXPRESION//////////////////////////////////////////////////
@@ -347,7 +387,7 @@ def parse(inp) :
     global lexer
     global parser
     errores = []
-    lexer = lex.lex()
+    lexer = lex.lex(reflags= re.IGNORECASE)
     parser = yacc.yacc()
     global input
     input = inp
@@ -374,5 +414,9 @@ def interfaz(archivo):
         if isinstance(value, Excepcion) :
             ast.getExcepciones().append(value)
             ast.updateConsola(value.toString())
+        if isinstance(value, Break): 
+            err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+            ast.getExcepciones().append(err)
+            ast.updateConsola(err.toString())
 
     return ast.getConsola()
