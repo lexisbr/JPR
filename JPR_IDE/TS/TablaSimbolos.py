@@ -5,7 +5,6 @@ class TablaSimbolos:
     def __init__(self, anterior = None):
         self.tabla = {} # Diccionario Vacio
         self.anterior = anterior
-        self.funciones = []
 
     def setTabla(self, simbolo):      # Agregar una variable
         if simbolo.id.lower() in self.tabla :
@@ -33,7 +32,12 @@ class TablaSimbolos:
                     else:
                         tablaActual.tabla[simbolo.id].setTipo(simbolo.getTipo())
                     tablaActual.tabla[simbolo.id].setValor(simbolo.getValor())         
-                    return None             #VARIABLE ACTUALIZADA
+                    return None #VARIABLE ACTUALIZADA
+                elif simbolo.getTipo() == 'INCREMENTO' or simbolo.getTipo() == 'DECREMENTO':
+                    if (tablaActual.tabla[simbolo.id].getTipo() == TIPO.ENTERO or tablaActual.tabla[simbolo.id].getTipo() == TIPO.DECIMAL):
+                        valorAnterior = tablaActual.tabla[simbolo.id].getValor()
+                        tablaActual.tabla[simbolo.id].setValor(valorAnterior+simbolo.getValor())
+                        return None
                 return Excepcion("Semantico", "Tipo de dato Diferente en Asignacion", simbolo.getFila(), simbolo.getColumna())
             else:
                 tablaActual = tablaActual.anterior

@@ -60,6 +60,8 @@ tokens  = [
     'MENORIGUAL',
     'LLAVEA',
     'LLAVEC',
+    'MASMAS',
+    'MENOSMENOS',
 ] + list(reservadas.values())
 
 # Tokens
@@ -84,6 +86,8 @@ t_OR            = r'\|\|'
 t_NOT           = r'!'
 t_LLAVEA        = r'{'
 t_LLAVEC        = r'}'
+t_MASMAS        = r'\+\+'
+t_MENOSMENOS    = r'--'
 
 def t_DECIMAL(t):
     r'\d+\.\d+'
@@ -122,6 +126,12 @@ def t_ID(t):
 def t_CADENA(t):
     r'(\".*?\")'
     t.value = t.value[1:-1] # remuevo las comillas
+    
+    print(str(t.value))
+    t.value = t.value.replace('\\t','\t')
+    t.value = t.value.replace('\\n','\n')
+    t.value = t.value.replace("\\'","\'")
+    t.value = t.value.replace('\\\\','\t')
     return t
 
 def t_CARACTER(t):
@@ -191,6 +201,9 @@ from Instrucciones.Asignacion import Asignacion
 from Instrucciones.If import If
 from Instrucciones.While import While
 from Instrucciones.Break import Break
+from Instrucciones.Main import Main
+from Instrucciones.Funcion import Funcion
+from Instrucciones.Llamada import Llamada
 
 def p_init(t) :
     'init            : instrucciones'
@@ -218,9 +231,14 @@ def p_instruccion(t) :
                         | declaracion_instr finins
                         | declaracion_instr2 finins
                         | asignacion_instr finins 
+                        | asignacion2_instr finins 
                         | if_instr 
                         | while_instr 
-                        | break_instr finins '''
+                        | break_instr finins 
+                        | main_instr 
+                        | funcion_instr 
+                        | llamada_instr finins 
+                        '''
     t[0] = t[1]
 
 def p_finins(t) :
@@ -256,6 +274,13 @@ def p_asignacion(t) :
     'asignacion_instr     : ID IGUAL expresion'
     t[0] = Asignacion(t[1], t[3], t.lineno(1), find_column(input, t.slice[1]))
 
+#//////////////////////////////////////ASIGNACION 2//////////////////////////////////////////////////
+
+def p_asignacion2(t) :
+    '''asignacion2_instr     : ID MASMAS
+                            | ID MENOSMENOS '''
+    t[0] = Asignacion(t[1], str(t[2]), t.lineno(1), find_column(input, t.slice[1]))
+
 #///////////////////////////////////////IF//////////////////////////////////////////////////
 
 def p_if1(t) :
@@ -282,6 +307,24 @@ def p_break(t) :
     'break_instr     : RBREAK'
     t[0] = Break(t.lineno(1), find_column(input, t.slice[1]))
 
+#///////////////////////////////////////MAIN//////////////////////////////////////////////////
+
+def p_main(t) :
+    'main_instr     : RMAIN PARA PARC LLAVEA instrucciones LLAVEC'
+    t[0] = Main(t[5], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////FUNCION//////////////////////////////////////////////////
+
+def p_funcion(t) :
+    'funcion_instr     : RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC'
+    t[0] = Funcion(t[2], t[6], t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////LLAMADA A FUNCION//////////////////////////////////////////////////
+
+def p_llamada(t) :
+    'llamada_instr     : ID PARA PARC'
+    t[0] = Llamada(t[1], t.lineno(1), find_column(input, t.slice[1]))
+
 #///////////////////////////////////////TIPO//////////////////////////////////////////////////
 
 def p_tipo(t) :
@@ -301,6 +344,8 @@ def p_tipo(t) :
         t[0] = TIPO.BOOLEANO 
     elif t[1] == 'var':
         t[0] = TIPO.VAR 
+    elif t[1] == 'char':
+        t[0] = TIPO.CARACTER 
 
 
 #///////////////////////////////////////EXPRESION//////////////////////////////////////////////////
@@ -321,6 +366,8 @@ def p_expresion_binaria(t):
             | expresion MAYORIGUAL expresion
             | expresion AND expresion
             | expresion OR expresion
+            | expresion MASMAS
+            | expresion MENOSMENOS
     '''
     if t[2] == '+':
         t[0] = Aritmetica(OperadorAritmetico.MAS, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
@@ -350,6 +397,10 @@ def p_expresion_binaria(t):
         t[0] = Logica(OperadorLogico.AND, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
     elif t[2] == '||':
         t[0] = Logica(OperadorLogico.OR, t[1],t[3], t.lineno(2), find_column(input, t.slice[2]))
+    elif t[2] == '++':
+        t[0] = Aritmetica(OperadorAritmetico.INCREMENTO, t[1],str(t[2]), t.lineno(2), find_column(input, t.slice[2]))
+    elif t[2] == '--':
+        t[0] = Aritmetica(OperadorAritmetico.DECREMENTO, t[1],str(t[2]), t.lineno(2), find_column(input, t.slice[2]))
 
 def p_expresion_unaria(t):
     '''
@@ -375,19 +426,19 @@ def p_expresion_entero(t):
     '''expresion : ENTERO'''
     t[0] = Primitivos(TIPO.ENTERO,t[1], t.lineno(1), find_column(input, t.slice[1]))
 
-def p_primitivo_decimal(t):
+def p_expresion_decimal(t):
     '''expresion : DECIMAL'''
     t[0] = Primitivos(TIPO.DECIMAL, t[1], t.lineno(1), find_column(input, t.slice[1]))
 
-def p_primitivo_cadena(t):
+def p_expresion_cadena(t):
     '''expresion : CADENA'''
     t[0] = Primitivos(TIPO.CADENA,str(t[1]).replace('\\n', '\n'), t.lineno(1), find_column(input, t.slice[1]))
 
-def p_primitivo_booleano(t):
+def p_expresion_booleano(t):
     '''expresion : BOOLEANO'''
     t[0] = Primitivos(TIPO.BOOLEANO,bool(t[1]), t.lineno(1), find_column(input, t.slice[1]))
     
-def p_primitivo_caracter(t):
+def p_expresion_caracter(t):
     '''expresion : CARACTER'''
     t[0] = Primitivos(TIPO.CARACTER,str(t[1]), t.lineno(1), find_column(input, t.slice[1]))
 
@@ -431,14 +482,42 @@ def interfaz(archivo):
         ast.updateConsola(error.toString())
 
     if ast.getInstrucciones()!=None:
-        for instruccion in ast.getInstrucciones():      # REALIZAR LAS ACCIONES
-            value = instruccion.interpretar(ast,TSGlobal)
-            if isinstance(value, Excepcion) :
-                ast.getExcepciones().append(value)
-                ast.updateConsola(value.toString())
-            if isinstance(value, Break): 
-                err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+        for instruccion in ast.getInstrucciones():      # 1ERA PASADA (DECLARACIONES Y ASIGNACIONES)
+            if isinstance(instruccion, Funcion):
+                ast.addFuncion(instruccion)     
+            if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion):
+                value = instruccion.interpretar(ast,TSGlobal)
+                if isinstance(value, Excepcion) :
+                    ast.getExcepciones().append(value)
+                    ast.updateConsola(value.toString())
+                if isinstance(value, Break): 
+                    err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                    ast.getExcepciones().append(err)
+                    ast.updateConsola(err.toString())
+
+        contador = 0
+        for instruccion in ast.getInstrucciones():      # 2DA PASADA (MAIN)
+            if isinstance(instruccion, Main):
+                contador += 1
+                if contador == 2: # VERIFICAR LA DUPLICIDAD
+                    err = Excepcion("Semantico", "Existe mas de una funcion Main", instruccion.fila, instruccion.columna)
+                    ast.getExcepciones().append(err)
+                    ast.updateConsola(err.toString())
+                    break
+                value = instruccion.interpretar(ast,TSGlobal)
+                if isinstance(value, Excepcion) :
+                    ast.getExcepciones().append(value)
+                    ast.updateConsola(value.toString())
+                if isinstance(value, Break): 
+                    err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                    ast.getExcepciones().append(err)
+                    ast.updateConsola(err.toString())
+            
+        for instruccion in ast.getInstrucciones():    # 3ERA PASADA (SENTENCIAS FUERA DE MAIN)
+            if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, Funcion)):
+                err = Excepcion("Semantico", "Sentencias fuera de Main", instruccion.fila, instruccion.columna)
                 ast.getExcepciones().append(err)
                 ast.updateConsola(err.toString())
+        
 
     return ast.getConsola()

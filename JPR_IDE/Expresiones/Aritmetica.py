@@ -15,7 +15,7 @@ class Aritmetica(Instruccion):
     def interpretar(self, tree, table):
         izq = self.OperacionIzq.interpretar(tree, table)
         if isinstance(izq, Excepcion): return izq
-        if self.OperacionDer != None:
+        if self.OperacionDer != None  and self.OperacionDer!="++"  and self.OperacionDer!="--":
             der = self.OperacionDer.interpretar(tree, table)
             if isinstance(der, Excepcion): return der
 
@@ -79,6 +79,23 @@ class Aritmetica(Instruccion):
                 self.tipo = TIPO.DECIMAL
                 return - self.obtenerVal(self.OperacionIzq.tipo, izq)
             return Excepcion("Semantico", "Tipo Erroneo de operacion para - unario.", self.fila, self.columna)
+        
+        elif self.operador == OperadorAritmetico.INCREMENTO:  # INCREMENTO
+            
+            if (self.OperacionIzq.tipo == TIPO.ENTERO ):
+                self.tipo = TIPO.ENTERO
+                print(self.obtenerVal(self.OperacionIzq.tipo, izq))
+                return self.obtenerVal(self.OperacionIzq.tipo, izq) +1
+            return Excepcion("Semantico", "Tipo Erroneo de operacion para ++.", self.fila, self.columna)
+        
+        elif self.operador == OperadorAritmetico.DECREMENTO:  # INCREMENTO
+            
+            if (self.OperacionIzq.tipo == TIPO.ENTERO ):
+                self.tipo = TIPO.ENTERO
+                print(self.obtenerVal(self.OperacionIzq.tipo, izq))
+                return self.obtenerVal(self.OperacionIzq.tipo, izq) -1
+            return Excepcion("Semantico", "Tipo Erroneo de operacion para --.", self.fila, self.columna)
+        
         return Excepcion("Semantico", "Tipo de Operacion no Especificado.", self.fila, self.columna)
 
 
