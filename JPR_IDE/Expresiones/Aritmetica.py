@@ -86,12 +86,20 @@ class Aritmetica(Instruccion):
                 self.tipo = TIPO.ENTERO
                 print(self.obtenerVal(self.OperacionIzq.tipo, izq))
                 return self.obtenerVal(self.OperacionIzq.tipo, izq) +1
+            elif (self.OperacionIzq.tipo == TIPO.DECIMAL ):
+                self.tipo = TIPO.DECIMAL
+                print(self.obtenerVal(self.OperacionIzq.tipo, izq))
+                return self.obtenerVal(self.OperacionIzq.tipo, izq) +1
             return Excepcion("Semantico", "Tipo Erroneo de operacion para ++.", self.fila, self.columna)
         
         elif self.operador == OperadorAritmetico.DECREMENTO:  # INCREMENTO
             
             if (self.OperacionIzq.tipo == TIPO.ENTERO ):
                 self.tipo = TIPO.ENTERO
+                print(self.obtenerVal(self.OperacionIzq.tipo, izq))
+                return self.obtenerVal(self.OperacionIzq.tipo, izq) -1
+            elif (self.OperacionIzq.tipo == TIPO.DECIMAL ):
+                self.tipo = TIPO.DECIMAL
                 print(self.obtenerVal(self.OperacionIzq.tipo, izq))
                 return self.obtenerVal(self.OperacionIzq.tipo, izq) -1
             return Excepcion("Semantico", "Tipo Erroneo de operacion para --.", self.fila, self.columna)

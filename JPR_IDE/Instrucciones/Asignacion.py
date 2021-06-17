@@ -1,7 +1,7 @@
 from TS.Excepcion import Excepcion
 from Abstract.Instruccion import Instruccion
 from TS.Simbolo import Simbolo
-
+from TS.Tipo import OperadorAritmetico
 
 class Asignacion(Instruccion):
     def __init__(self, identificador, expresion, fila, columna):
@@ -12,9 +12,9 @@ class Asignacion(Instruccion):
 
     def interpretar(self, tree, table):
         if(self.expresion=='++'):
-            simbolo = Simbolo(self.identificador, "INCREMENTO", self.fila, self.columna, 1)
+            simbolo = Simbolo(self.identificador, OperadorAritmetico.INCREMENTO, self.fila, self.columna, 1)
         elif(self.expresion=='--'):
-            simbolo = Simbolo(self.identificador, "DECREMENTO", self.fila, self.columna, -1)
+            simbolo = Simbolo(self.identificador, OperadorAritmetico.DECREMENTO, self.fila, self.columna, -1)
         else:    
             value = self.expresion.interpretar(tree, table) # Valor a asignar a la variable
             if isinstance(value, Excepcion): return value

@@ -1,3 +1,4 @@
+from TS.Tipo import OperadorAritmetico
 from TS.Excepcion import Excepcion
 from TS.Tipo import TIPO
 
@@ -14,31 +15,35 @@ class TablaSimbolos:
             return None
 
     def getTabla(self, id):            # obtener una variable
-        tablaActual = self
-        while tablaActual.tabla != None:
-            if id in tablaActual.tabla :
-                return tablaActual.tabla[id]           # RETORNA SIMBOLO
-            else:
-                tablaActual = tablaActual.anterior
-        return None
+        try:
+            tablaActual = self
+            while tablaActual.tabla != None:
+                if id in tablaActual.tabla :
+                    return tablaActual.tabla[id]           # RETORNA SIMBOLO
+                else:
+                    tablaActual = tablaActual.anterior
+            return None
+        except:
+            return None
+            
 
     def actualizarTabla(self, simbolo):
         tablaActual = self
         while tablaActual != None:
-            if simbolo.id in tablaActual.tabla :
-                if tablaActual.tabla[simbolo.id].getTipo() == simbolo.getTipo() or tablaActual.tabla[simbolo.id].getTipo()== TIPO.VAR or simbolo.getTipo()== TIPO.NULO:
+            if simbolo.id.lower() in tablaActual.tabla :
+                if tablaActual.tabla[simbolo.id.lower()].getTipo() == simbolo.getTipo() or tablaActual.tabla[simbolo.id.lower()].getTipo()== TIPO.VAR or simbolo.getTipo()== TIPO.NULO:
                     if simbolo.getTipo()== TIPO.NULO:
-                        tablaActual.tabla[simbolo.id].setTipo(TIPO.VAR)
+                        tablaActual.tabla[simbolo.id.lower()].setTipo(TIPO.VAR)
                     else:
-                        tablaActual.tabla[simbolo.id].setTipo(simbolo.getTipo())
-                    tablaActual.tabla[simbolo.id].setValor(simbolo.getValor())         
+                        tablaActual.tabla[simbolo.id.lower()].setTipo(simbolo.getTipo())
+                    tablaActual.tabla[simbolo.id.lower()].setValor(simbolo.getValor())         
                     return None #VARIABLE ACTUALIZADA
-                elif simbolo.getTipo() == 'INCREMENTO' or simbolo.getTipo() == 'DECREMENTO':
-                    if (tablaActual.tabla[simbolo.id].getTipo() == TIPO.ENTERO or tablaActual.tabla[simbolo.id].getTipo() == TIPO.DECIMAL):
-                        valorAnterior = tablaActual.tabla[simbolo.id].getValor()
-                        tablaActual.tabla[simbolo.id].setValor(valorAnterior+simbolo.getValor())
+                elif simbolo.getTipo() == OperadorAritmetico.INCREMENTO or simbolo.getTipo() == OperadorAritmetico.DECREMENTO:
+                    if (tablaActual.tabla[simbolo.id.lower()].getTipo() == TIPO.ENTERO or tablaActual.tabla[simbolo.id.lower()].getTipo() == TIPO.DECIMAL):
+                        valorAnterior = tablaActual.tabla[simbolo.id.lower()].getValor()
+                        tablaActual.tabla[simbolo.id.lower()].setValor(valorAnterior+simbolo.getValor())
                         return None
                 return Excepcion("Semantico", "Tipo de dato Diferente en Asignacion", simbolo.getFila(), simbolo.getColumna())
             else:
                 tablaActual = tablaActual.anterior
-        return Excepcion("Semantico", "Variable No encontrada en Asignacion", simbolo.getFila(), simbolo.getColumna())
+        return Excepcion("Semantico", "Variable no encontrada en asignacion.", simbolo.getFila(), simbolo.getColumna())
