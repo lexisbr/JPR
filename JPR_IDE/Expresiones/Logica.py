@@ -22,6 +22,7 @@ class Logica(Instruccion):
         if self.operador == OperadorLogico.AND:
             if self.OperacionIzq.tipo == TIPO.BOOLEANO and self.OperacionDer.tipo == TIPO.BOOLEANO:
                 return self.obtenerVal(self.OperacionIzq.tipo, izq) and self.obtenerVal(self.OperacionDer.tipo, der)
+            print(str(self.OperacionIzq.tipo)+" "+str(self.OperacionDer.tipo))
             return Excepcion("Semantico", "Tipo Erroneo de operacion para &&.", self.fila, self.columna)
         elif self.operador == OperadorLogico.OR:
             if self.OperacionIzq.tipo == TIPO.BOOLEANO and self.OperacionDer.tipo == TIPO.BOOLEANO:

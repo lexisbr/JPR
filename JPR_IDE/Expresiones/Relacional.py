@@ -92,7 +92,7 @@ class Relacional(Instruccion):
                     return self.obtenerVal(self.OperacionIzq.tipo, izq) <= self.obtenerVal(self.OperacionDer.tipo, der)
                 elif self.OperacionIzq.tipo == TIPO.BOOLEANO and self.OperacionDer.tipo == TIPO.BOOLEANO:
                     return self.obtenerVal(self.OperacionIzq.tipo, izq) <= self.obtenerVal(self.OperacionDer.tipo, der)
-                return Excepcion("Semantico", "Tipo Erroneo de operacion para <.", self.fila, self.columna)
+                return Excepcion("Semantico", "Tipo Erroneo de operacion para <=.", self.fila, self.columna)
 
             elif self.operador == OperadorRelacional.MAYORIGUAL:
                 if self.OperacionIzq.tipo == TIPO.ENTERO and self.OperacionDer.tipo == TIPO.ENTERO:
@@ -105,7 +105,7 @@ class Relacional(Instruccion):
                     return self.obtenerVal(self.OperacionIzq.tipo, izq) >= self.obtenerVal(self.OperacionDer.tipo, der)
                 elif self.OperacionIzq.tipo == TIPO.BOOLEANO and self.OperacionDer.tipo == TIPO.BOOLEANO:
                     return self.obtenerVal(self.OperacionIzq.tipo, izq) >= self.obtenerVal(self.OperacionDer.tipo, der)
-                return Excepcion("Semantico", "Tipo Erroneo de operacion para >.", self.fila, self.columna)
+                return Excepcion("Semantico", "Tipo Erroneo de operacion para >=.", self.fila, self.columna)
 
             elif self.operador == OperadorRelacional.DIFERENTE:
                 if self.OperacionIzq.tipo == TIPO.ENTERO and self.OperacionDer.tipo == TIPO.ENTERO:

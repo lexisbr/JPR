@@ -126,19 +126,25 @@ def t_ID(t):
      return t
 
 def t_CADENA(t):
-    r'(\".*?\")'
+    r'\"(\\"|.)*?\"'
     t.value = t.value[1:-1] # remuevo las comillas
     
-    print(str(t.value))
     t.value = t.value.replace('\\t','\t')
     t.value = t.value.replace('\\n','\n')
+    t.value = t.value.replace('\\"','\"')
     t.value = t.value.replace("\\'","\'")
-    t.value = t.value.replace('\\\\','\t')
+    t.value = t.value.replace('\\\\','\\')
     return t
 
 def t_CARACTER(t):
-    r'(\'.?\')'
-    t.value = t.value[1:-1] # remuevo las comillas 
+    r'(\'.{1}\')'
+    t.value = t.value[1:-1] # remuevo las comillas
+    
+    t.value = t.value.replace('\\t','\t')
+    t.value = t.value.replace('\\n','\n')
+    t.value = t.value.replace('\\"','\"')
+    t.value = t.value.replace("\\'","\'")
+    t.value = t.value.replace('\\\\','\\') 
     return t
 
 # Comentario multilinea 
@@ -175,14 +181,15 @@ lexer = lex.lex(reflags= re.IGNORECASE)
 
 # Asociación de operadores y precedencia
 precedence = (
-    ('left','OR'),
-    ('left','AND'),
-    ('right','UNOT'),
-    ('left','MENORQUE','MAYORQUE', 'IGUALIGUAL'),
-    ('left','MAS','MENOS'),
+    ('left', 'OR'),
+    ('left', 'AND'),
+    ('right', 'UNOT'),
+    ('left', 'MENORQUE', 'MAYORQUE', 'MAYORIGUAL', 'MENORIGUAL', 'DIFERENTE', 'IGUALIGUAL'),
+    ('left', 'MAS', 'MENOS'),
     ('left', 'POR', 'DIV', 'MOD'),
     ('nonassoc', 'POT'),
-    ('right','UMENOS'),
+    ('right', 'UMENOS'),
+    ('left','MASMAS','MENOSMENOS'),
 )
 
 

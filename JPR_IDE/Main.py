@@ -206,7 +206,6 @@ entradaTxt.bind('<Button>', posicion)
 entradaTxt.bind('<Key>', actualizarLineas)
 entradaTxt.bind('<Enter>', actualizarLineas)
 
-
 # Main loop
 root.mainloop()
 
