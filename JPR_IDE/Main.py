@@ -1,5 +1,6 @@
 # Imports
 import os
+import pathlib
 from tkinter import filedialog
 import tkinter as tk
 from tkinter import *
@@ -67,7 +68,6 @@ def abrir():
     archivoLbl.config(text = archivo)
 
 
-
 #Nuevo archivo
 def nuevo():   
     global archivo
@@ -79,7 +79,7 @@ def nuevo():
 def guardarArchivo():    
     global archivo
     if archivo == "":
-        gutv1ardarComo()
+        guardarComo()
     else:
         guardarc = open(archivo, "w")
         guardarc.write(entradaTxt.get(1.0, END))
@@ -109,6 +109,29 @@ def compilar_archivo():
         tabla_errores.insert(parent='',index=cont,iid=cont,text='',values=(cont,excepcion.getTipo(),excepcion.getDescripcion(),excepcion.getFila(),excepcion.getColumna()))
         cont += 1
         
+# Exportar errores
+def exportar_errores():
+    archivo = "tablaErrores.dot"
+    salida = "digraph errores {\n"
+    salida += "tbl [\n shape = plaintext\n"
+    salida += "label=<\n"
+    salida += "<table border=\"1\" cellborder=\"1\" cellspacing=\"1\" cellpadding=\"8\">\n"
+    salida += "<tr> <td colspan='5'>Reporte de Errores</td> </tr> \n"
+    salida += "<tr> <td>#</td> <td>Tipo</td> <td>Descripcion</td> <td>Linea</td> <td>Columna</td> </tr> \n"
+    excepciones = lista_errores()
+    cont = 1
+    for excepcion in excepciones:
+        salida += "<tr> <td>"+str(cont)+"</td> <td>"+excepcion.getTipo()+"</td> <td>"+excepcion.getDescripcion()+"</td> <td>"+str(excepcion.getFila())+"</td> <td>"+str(excepcion.getColumna())+"</td> </tr> \n"
+        cont += 1
+    salida += "</table>\n"
+    salida += ">];\n"
+    salida += "}"
+    
+    with open(archivo,'w') as f:
+        f.write(salida) 
+    
+    os.system('dot -Tpng '+archivo+' -o imagen.png')
+    
 
 # Declaracion del tk
 root = Tk()
@@ -161,6 +184,9 @@ erroresLbl.grid(row=5,column=1)
 #Boton de compilacion
 compilarButton= Button(frameEditors,text="Compilar",width=10,command=compilar_archivo)
 compilarButton.grid(row=1,column=0,sticky="s")
+#Boton para exportar errores
+exportarButton= Button(frameEditors,text="Exportar errores",width=10,command=exportar_errores)
+exportarButton.grid(row=7,column=1,sticky="s")
 
 #Tabla De Simbolos
 tv=ttk.Treeview(frameEditors,height=7)
