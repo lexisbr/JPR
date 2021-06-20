@@ -137,7 +137,7 @@ def t_CADENA(t):
     return t
 
 def t_CARACTER(t):
-    r'(\'.{1}\')'
+    r'\'(\\\'|\\"|\\t|\\n|\\\\|[^\'\\])?\''
     t.value = t.value[1:-1] # remuevo las comillas
     
     t.value = t.value.replace('\\t','\t')
@@ -164,8 +164,17 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
     
+def p_error(t):
+    try:
+        errores.append(Excepcion("Lexico", "Error léxico." +
+                    t.value[0], t.lexer.lineno, find_column(input, t)))
+    except:
+        errores.append(Excepcion("Lexico", "Error léxico." , 0, 0))
+        
+
 def t_error(t):
-    errores.append(Excepcion("Lexico","Error léxico." + t.value[0] , t.lexer.lineno, find_column(input, t)))
+    errores.append(Excepcion("Lexico", "Error léxico." +
+                   t.value[0], t.lexer.lineno, find_column(input, t)))
     t.lexer.skip(1)
 
 # Compute column.
@@ -261,7 +270,8 @@ def p_finins(t) :
     t[0] = None
 
 def p_instruccion_error(t):
-    'instruccion        : error PUNTOCOMA'
+    '''instruccion        : error PUNTOCOMA
+                            | error '''
     errores.append(Excepcion("Sintáctico","Error Sintáctico." + str(t[1].value) , t.lineno(1), find_column(input, t.slice[1])))
     t[0] = ""
 #///////////////////////////////////////IMPRIMIR//////////////////////////////////////////////////

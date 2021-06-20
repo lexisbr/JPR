@@ -6,6 +6,7 @@ from tkinter import *
 from tkinter import scrolledtext
 from tkinter import ttk
 from grammar import interfaz as compilar
+from grammar import getErrores as lista_errores
 
 # Metodos
 # Actualizar lineas
@@ -78,7 +79,7 @@ def nuevo():
 def guardarArchivo():    
     global archivo
     if archivo == "":
-        guardarComo()
+        gutv1ardarComo()
     else:
         guardarc = open(archivo, "w")
         guardarc.write(entradaTxt.get(1.0, END))
@@ -101,6 +102,13 @@ def compilar_archivo():
     consoleTxt.delete(1.0, END)
     contenido = compilar(entradaTxt.get(1.0, END))
     consoleTxt.insert(INSERT,contenido)
+    excepciones = lista_errores()
+    cont = 1
+    tabla_errores.delete(*tabla_errores.get_children())
+    for excepcion in excepciones:
+        tabla_errores.insert(parent='',index=cont,iid=cont,text='',values=(cont,excepcion.getTipo(),excepcion.getDescripcion(),excepcion.getFila(),excepcion.getColumna()))
+        cont += 1
+        
 
 # Declaracion del tk
 root = Tk()
@@ -177,21 +185,21 @@ tv.heading('Referencias', text='Referencias', anchor=CENTER)
 tv.grid(column=0, row=6,padx=25,sticky="w")
 
 #Tabla Reporte de erroresLbl
-tv1=ttk.Treeview(frameEditors,height=7)
-tv1['columns']=('#', 'Tipo', 'Descripcion', 'Linea', 'Columna')
-tv1.column('#0', width=0, stretch=NO)
-tv1.column('#', anchor=CENTER, width=10)
-tv1.column('Tipo', anchor=CENTER, width=100)
-tv1.column('Descripcion', anchor=CENTER, width=350)
-tv1.column('Linea', anchor=CENTER, width=100)
-tv1.column('Columna', anchor=CENTER, width=100)
-tv1.heading('#0', text='', anchor=CENTER)
-tv1.heading('#', text='#', anchor=CENTER)
-tv1.heading('Tipo', text='Tipo', anchor=CENTER)
-tv1.heading('Descripcion', text='Descripcion', anchor=CENTER)
-tv1.heading('Linea', text='Linea', anchor=CENTER)
-tv1.heading('Columna', text='Columna', anchor=CENTER)
-tv1.grid(row=6,column=1)
+tabla_errores=ttk.Treeview(frameEditors,height=7)
+tabla_errores['columns']=('#', 'Tipo', 'Descripcion', 'Linea', 'Columna')
+tabla_errores.column('#0', width=0, stretch=NO)
+tabla_errores.column('#', anchor=CENTER, width=10)
+tabla_errores.column('Tipo', anchor=CENTER, width=100)
+tabla_errores.column('Descripcion', anchor=CENTER, width=350)
+tabla_errores.column('Linea', anchor=CENTER, width=100)
+tabla_errores.column('Columna', anchor=CENTER, width=100)
+tabla_errores.heading('#0', text='', anchor=CENTER)
+tabla_errores.heading('#', text='#', anchor=CENTER)
+tabla_errores.heading('Tipo', text='Tipo', anchor=CENTER)
+tabla_errores.heading('Descripcion', text='Descripcion', anchor=CENTER)
+tabla_errores.heading('Linea', text='Linea', anchor=CENTER)
+tabla_errores.heading('Columna', text='Columna', anchor=CENTER)
+tabla_errores.grid(row=6,column=1)
 
 
 
