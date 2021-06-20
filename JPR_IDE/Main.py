@@ -1,8 +1,10 @@
 # Imports
 import os
-import pathlib
+import platform
+import re
 from tkinter import filedialog
 import tkinter as tk
+from tkinter import ttk
 from tkinter import *
 from tkinter import scrolledtext
 from tkinter import ttk
@@ -10,6 +12,119 @@ from grammar import interfaz as compilar
 from grammar import getErrores as lista_errores
 
 # Metodos
+
+# Recorrer el texto para separar palabras por colores
+def recorrerInput(i):  
+    lista = []
+    val = ''
+    counter = 0
+    while counter < len(i):
+            if re.search(r"[a-z|0-9|.|A-Z]", i[counter]):
+                val += i[counter]
+            elif i[counter] == "\"":
+                if len(val) != 0:
+                    l = []
+                    l.append("cadena")
+                    l.append(val)
+                    lista.append(l)
+                    val = ''
+                val = i[counter]
+                counter += 1
+                
+                while counter < len(i):
+                    if i[counter] == "\"":
+                        val += i[counter]
+                        l = []
+                        l.append("cadena")
+                        l.append(val)
+                        lista.append(l)
+                        val = ''
+                        break
+                    val += i[counter]
+                    counter += 1
+            elif i[counter] == "#":
+                if len(val) != 0:
+                    l = []
+                    l.append("comentario")
+                    l.append(val)
+                    lista.append(l)
+                    val = ''
+                val = i[counter]
+                counter += 1
+                if i[counter] == "*":
+                   while counter < len(i):
+                        if i[counter] == "#":
+                            val += i[counter]
+                            l = []
+                            l.append("comentario")
+                            l.append(val)
+                            lista.append(l)
+                            val = ''
+                            break
+                        val += i[counter]
+                        counter += 1 
+                else:    
+                    while counter < len(i):
+                        if i[counter] == "\n":
+                            val += i[counter]
+                            l = []
+                            l.append("comentario")
+                            l.append(val)
+                            lista.append(l)
+                            val = ''
+                            break
+                        val += i[counter]
+                        counter += 1
+            elif i[counter] == "\'":
+                if len(val) != 0:
+                    l = []
+                    l.append("variable")
+                    l.append(val)
+                    lista.append(l)
+                    val = ''
+                val = i[counter]
+                counter += 1
+                while counter < len(i):
+                    if i[counter] == "\'":
+                        val += i[counter]
+                        l = []
+                        l.append("cadena")
+                        l.append(val)
+                        lista.append(l)
+                        val = ''
+                        break
+                    val += i[counter]
+                    counter += 1
+            else:
+                if len(val) != 0:
+                    l = []
+                    l.append("variable")
+                    l.append(val)
+                    lista.append(l)
+                    val = ''
+                l = []
+                l.append("normal")
+                l.append(i[counter])
+                lista.append(l)
+            counter +=1
+    for s in lista:
+        if s[1] == 'var' or s[1] == 'func' or s[1] == 'read' or s[1] == 'tolower' or s[1] == 'toupper' or s[1] == 'lenght' or s[1] == 'truncate' or s[1] == 'round' or s[1] == 'typeof' or s[1] == 'return' or s[1] == 'break' or s[1] == 'switch' or s[1] == 'case' or s[1] == 'default' or s[1] == 'false' or s[1] == 'true' or s[1] == 'while' or s[1] == 'for' or s[1] == 'continue' or  s[1] == 'else' or s[1] == 'if' or s[1] == 'null' or s[1] == 'boolean' or s[1] == 'string' or s[1] == 'int' or s[1] == 'double' or s[1] == 'char' or s[1] == 'print' or s[1] == 'main':
+            s[0] = 'reservada'
+        elif re.search(r'\d+',s[1]) or re.search(r'\d+\.\d+',s[1]):
+            if re.search(r'\".*?\"',s[1]):
+                s[0] = 'cadena'
+            elif re.search(r'\#\*(.|\n)*?\*\#|\#.*\n',s[1]):
+                s[0] = 'comentario'
+            elif re.search(r'[a-z|A-Z]',s[1]):
+                s[0]= "normal"
+            else:
+                s[0] = 'numero'
+        elif re.search(r'\".*?\"',s[1]):
+            s[0] = 'cadena'
+        elif re.search(r'\#\*(.|\n)*?\*\#|\#.*\n',s[1]):
+            s[0] = 'comentario'
+    return lista
+
 # Actualizar lineas
 def lineas(*args):
     linesLbl.delete("all")
@@ -50,7 +165,12 @@ def actualizarArchivoLblGuardar():
     if last_char == "*" and archivo != "":
         archivoLbl.config(text = archivo)
 
-        
+# Pintar texto
+def pintar_texto():
+    contenido = entradaTxt.get(1.0, END)
+    entradaTxt.delete(1.0, "end")
+    for s in recorrerInput(contenido):
+        entradaTxt.insert(INSERT, s[1], s[0])        
 
 #Path del archivo en memoria
 archivo=""
@@ -62,21 +182,24 @@ def abrir():
     entrada = open(archivo)
     content = entrada.read()
     entradaTxt.delete(1.0, END)
-    entradaTxt.insert(INSERT, content)
+    for s in recorrerInput(content):
+        entradaTxt.insert(INSERT, s[1], s[0])
     entrada.close()
     lineas()
     archivoLbl.config(text = archivo)
+    consoleTxt.delete(1.0, END)
 
 
 #Nuevo archivo
 def nuevo():   
     global archivo
     entradaTxt.delete(1.0, END)
+    consoleTxt.delete(1.0, END)
     archivo = ""
     archivoLbl.config(text = "Archivo sin guardar")
 
 #Guardar archivo
-def guardarArchivo():    
+def guardarArchivo():
     global archivo
     if archivo == "":
         guardarComo()
@@ -85,17 +208,20 @@ def guardarArchivo():
         guardarc.write(entradaTxt.get(1.0, END))
         guardarc.close()
         actualizarArchivoLblGuardar()
-
+        pintar_texto()
+            
 #Guardar como archivo
 def guardarComo():      #GUARDAR COMO
     global archivo
     guardar = filedialog.asksaveasfilename(title = "Guardar Archivo", initialdir = "C:/",filetypes=[("jpr files", ".jpr")],defaultextension='.jpr')
-    fguardar = open(guardar, "w+")
-    fguardar.write(entradaTxt.get(1.0, END))
-    fguardar.close()
-    archivo = guardar
-    archivoLbl.config(text = guardar)
-    actualizarArchivoLblGuardar()
+    if(guardar):
+        fguardar = open(guardar, "w+")
+        fguardar.write(entradaTxt.get(1.0, END))
+        fguardar.close()
+        archivo = guardar
+        archivoLbl.config(text = guardar)
+        actualizarArchivoLblGuardar()
+        pintar_texto()
 
 #Compilacion
 def compilar_archivo():
@@ -108,6 +234,7 @@ def compilar_archivo():
     for excepcion in excepciones:
         tabla_errores.insert(parent='',index=cont,iid=cont,text='',values=(cont,excepcion.getTipo(),excepcion.getDescripcion(),excepcion.getFila(),excepcion.getColumna()))
         cont += 1
+    pintar_texto()
         
 # Exportar errores
 def exportar_errores():
@@ -117,7 +244,7 @@ def exportar_errores():
     salida += "label=<\n"
     salida += "<table border=\"1\" cellborder=\"1\" cellspacing=\"1\" cellpadding=\"8\">\n"
     salida += "<tr> <td colspan='5'>Reporte de Errores</td> </tr> \n"
-    salida += "<tr> <td>#</td> <td>Tipo</td> <td>Descripcion</td> <td>Linea</td> <td>Columna</td> </tr> \n"
+    salida += "<tr> <td> </td> <td>Tipo</td> <td>Descripcion</td> <td>Linea</td> <td>Columna</td> </tr> \n"
     excepciones = lista_errores()
     cont = 1
     for excepcion in excepciones:
@@ -132,7 +259,11 @@ def exportar_errores():
     
     os.system('dot -Tpng '+archivo+' -o imagen.png')
     
-
+    if(platform.system() == "Linux"):
+        os.system('xdg-open imagen.png')
+    else:
+        os.startfile('imagen.png')
+    
 # Declaracion del tk
 root = Tk()
 root.title("JPR Editor")
@@ -239,6 +370,14 @@ entradaTxt.bind('<KeyPress>', posicion)
 entradaTxt.bind('<Button>', posicion)
 entradaTxt.bind('<Key>', actualizarLineas)
 entradaTxt.bind('<Enter>', actualizarLineas)
+
+# Tags para pintar el textos
+entradaTxt.tag_config('reservada', foreground='DodgerBlue2')
+entradaTxt.tag_config('cadena', foreground='orange')
+entradaTxt.tag_config('numero', foreground='purple2')
+entradaTxt.tag_config('comentario', foreground='gray')
+entradaTxt.tag_config('normal', foreground='green2')
+
 
 # Main loop
 root.mainloop()
