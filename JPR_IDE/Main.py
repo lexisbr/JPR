@@ -257,12 +257,12 @@ def exportar_errores():
     with open(archivo,'w') as f:
         f.write(salida) 
     
-    os.system('dot -Tpng '+archivo+' -o imagen.png')
+    os.system('dot -Tjpg '+archivo+' -o imagen.jpg')
     
     if(platform.system() == "Linux"):
-        os.system('xdg-open imagen.png')
+        os.system('xdg-open imagen.jpg')
     else:
-        os.startfile('imagen.png')
+        os.startfile('imagen.jpg')
     
 # Declaracion del tk
 root = Tk()
