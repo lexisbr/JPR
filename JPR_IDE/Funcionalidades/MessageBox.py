@@ -2,8 +2,9 @@ from tkinter import *
 import sys
 
 class popupWindow(object):
-    def __init__(self,master):
-        top=self.top=Toplevel(master)
+    def __init__(self):
+        root=Tk()
+        top=self.top=Toplevel(root)
         self.l=Label(top,text="Ingrese un valor:")
         self.l.pack()
         self.e=Entry(top)
@@ -13,6 +14,13 @@ class popupWindow(object):
     def cleanup(self):
         self.value=self.e.get()
         self.top.destroy()
+        global valor
+        valor = self.value
+        
+    def getValor(self):
+        global valor
+        return valor
+
 
 class mainWindow(object):
     def __init__(self,master):
