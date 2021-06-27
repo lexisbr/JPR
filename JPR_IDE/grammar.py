@@ -208,6 +208,8 @@ precedence = (
 # Definición de la gramática
 
 #Abstract
+import os
+from Abstract.NodoAST import NodoAST
 from Abstract.Instruccion import Instruccion
 from Instrucciones.Imprimir import Imprimir
 from Expresiones.Primitivos import Primitivos
@@ -230,6 +232,8 @@ from Instrucciones.Switch import Switch
 from Instrucciones.Case import Case
 from Nativas.ToLower import ToLower
 from Nativas.ToUpper import ToUpper
+from Expresiones.Read import Read
+from Expresiones.Casteo import Casteo
 
 def p_init(t) :
     'init            : instrucciones'
@@ -608,6 +612,15 @@ def p_expresion_null(t):
     '''expresion : RNULL'''
     t[0] = Primitivos(TIPO.NULO,None, t.lineno(1), find_column(input, t.slice[1]))
 
+def p_expresion_read(t):
+    '''expresion : RREAD PARA PARC'''
+    t[0] = Read(t.lineno(1), find_column(input, t.slice[1]))
+
+def p_expresion_cast(t):
+    '''expresion : PARA tipo PARC expresion'''
+    t[0] = Casteo(t[2], t[4], t.lineno(1), find_column(input, t.slice[1]))
+
+
 import ply.yacc as yacc
 parser = yacc.yacc()
 
@@ -717,5 +730,20 @@ def interfaz(archivo):
                 ast.updateConsola(err.toString())
                 errores.append(err)
         
+        init = NodoAST("RAIZ")
+        instr = NodoAST("INSTRUCCIONES")
+
+        for instruccion in ast.getInstrucciones():
+            instr.agregarHijoNodo(instruccion.getNodo())
+
+        init.agregarHijoNodo(instr)
+        grafo = ast.getDot(init) #DEVUELVE EL CODIGO GRAPHVIZ DEL AST
+
+        dirname = os.path.dirname(__file__)
+        direcc = os.path.join(dirname, 'ast.dot')
+        arch = open(direcc, "w+")
+        arch.write(grafo)
+        arch.close()
+        os.system('dot -T pdf -o ast.pdf JPR/JPR_IDE/ast.dot')
 
     return ast.getConsola()

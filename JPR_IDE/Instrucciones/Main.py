@@ -1,3 +1,4 @@
+from Abstract.NodoAST import NodoAST
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.TablaSimbolos import TablaSimbolos
@@ -24,4 +25,14 @@ class Main(Instruccion):
                 tree.getExcepciones().append(err)
                 tree.updateConsola(err.toString())
                 listaerrores.append(err)
-        return listaerrores     
+        return listaerrores
+    
+    def getNodo(self):
+        nodo = NodoAST("MAIN")
+
+        instrucciones = NodoAST("INSTRUCCIONES")
+        for instr in self.instrucciones:
+            instrucciones.agregarHijoNodo(instr.getNodo())
+        nodo.agregarHijoNodo(instrucciones)
+        return nodo 
+     

@@ -1,3 +1,4 @@
+from Abstract.NodoAST import NodoAST
 from Abstract.Instruccion import Instruccion
 from Instrucciones.Break import Break
 from TS.Excepcion         import Excepcion
@@ -20,3 +21,12 @@ class Case(Instruccion):
                 tree.getExcepciones().append(result)
                 tree.updateConsola(result.toString())
             if isinstance(result, Break): return True
+
+    def getNodo(self):
+        nodo = NodoAST("CASE")
+
+        instrucciones = NodoAST("INSTRUCCIONES")
+        for instr in self.instrucciones:
+            instrucciones.agregarHijoNodo(instr.getNodo())
+        nodo.agregarHijoNodo(instrucciones)
+        return nodo 

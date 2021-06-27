@@ -4,7 +4,6 @@ Unused terminals:
 
     RCONTINUE
     RLENGTH
-    RREAD
     RROUND
     RTOLOWER
     RTOUPPER
@@ -104,6 +103,8 @@ Rule 87    expresion -> CADENA
 Rule 88    expresion -> BOOLEANO
 Rule 89    expresion -> CARACTER
 Rule 90    expresion -> RNULL
+Rule 91    expresion -> RREAD PARA PARC
+Rule 92    expresion -> PARA tipo PARC expresion
 
 Terminals, with rules where they appear
 
@@ -133,8 +134,8 @@ MENOSMENOS           : 27 79
 MOD                  : 69
 NOT                  : 81
 OR                   : 77
-PARA                 : 22 28 29 30 31 32 33 38 39 40 44 46 47 48 52 53 82
-PARC                 : 22 28 29 30 31 32 33 38 39 40 44 46 47 48 52 53 82
+PARA                 : 22 28 29 30 31 32 33 38 39 40 44 46 47 48 52 53 82 91 92
+PARC                 : 22 28 29 30 31 32 33 38 39 40 44 46 47 48 52 53 82 91 92
 POR                  : 66
 POT                  : 68
 PUNTOCOMA            : 18 20 38 38 39 39 40 40
@@ -154,7 +155,7 @@ RLENGTH              :
 RMAIN                : 46
 RNULL                : 90
 RPRINT               : 22
-RREAD                : 
+RREAD                : 91
 RRETURN              : 57
 RROUND               : 
 RSTRING              : 60
@@ -178,7 +179,7 @@ declaracion_for      : 39
 declaracion_instr    : 5
 declaracion_instr2   : 6
 default              : 32 33
-expresion            : 22 23 25 28 29 30 31 32 33 36 38 39 40 40 41 44 56 57 64 64 65 65 66 66 67 67 68 68 69 69 70 70 71 71 72 72 73 73 74 74 75 75 76 76 77 77 78 79 80 81 82
+expresion            : 22 23 25 28 29 30 31 32 33 36 38 39 40 40 41 44 56 57 64 64 65 65 66 66 67 67 68 68 69 69 70 70 71 71 72 72 73 73 74 74 75 75 76 76 77 77 78 79 80 81 82 92
 finins               : 4 5 6 7 8 12 16 17
 for_instr            : 13
 funcion_instr        : 15
@@ -195,7 +196,7 @@ parametros           : 47 49
 parametros_llamada   : 53 54
 return_instr         : 17
 switch_instr         : 10
-tipo                 : 23 24 51
+tipo                 : 23 24 51 92
 tipo_declaracion_for : 41
 while_instr          : 11
 
@@ -984,6 +985,8 @@ state 29
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -997,6 +1000,7 @@ state 29
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
     expresion                      shift and go to state 59
     llamada_instr                  shift and go to state 63
@@ -1006,6 +1010,7 @@ state 30
     (58) tipo -> RINT .
 
     ID              reduce using rule 58 (tipo -> RINT .)
+    PARC            reduce using rule 58 (tipo -> RINT .)
 
 
 state 31
@@ -1013,6 +1018,7 @@ state 31
     (59) tipo -> RDOUBLE .
 
     ID              reduce using rule 59 (tipo -> RDOUBLE .)
+    PARC            reduce using rule 59 (tipo -> RDOUBLE .)
 
 
 state 32
@@ -1020,6 +1026,7 @@ state 32
     (60) tipo -> RSTRING .
 
     ID              reduce using rule 60 (tipo -> RSTRING .)
+    PARC            reduce using rule 60 (tipo -> RSTRING .)
 
 
 state 33
@@ -1027,6 +1034,7 @@ state 33
     (61) tipo -> RBOOLEAN .
 
     ID              reduce using rule 61 (tipo -> RBOOLEAN .)
+    PARC            reduce using rule 61 (tipo -> RBOOLEAN .)
 
 
 state 34
@@ -1034,6 +1042,7 @@ state 34
     (62) tipo -> RCHAR .
 
     ID              reduce using rule 62 (tipo -> RCHAR .)
+    PARC            reduce using rule 62 (tipo -> RCHAR .)
 
 
 state 35
@@ -1041,6 +1050,7 @@ state 35
     (63) tipo -> RVAR .
 
     ID              reduce using rule 63 (tipo -> RVAR .)
+    PARC            reduce using rule 63 (tipo -> RVAR .)
 
 
 state 36
@@ -1370,6 +1380,8 @@ state 47
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -1383,8 +1395,9 @@ state 47
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 71
+    expresion                      shift and go to state 72
     llamada_instr                  shift and go to state 63
 
 state 48
@@ -1392,7 +1405,7 @@ state 48
     (23) declaracion_instr -> tipo ID . IGUAL expresion
     (24) declaracion_instr2 -> tipo ID .
 
-    IGUAL           shift and go to state 72
+    IGUAL           shift and go to state 73
     PUNTOCOMA       reduce using rule 24 (declaracion_instr2 -> tipo ID .)
     error           reduce using rule 24 (declaracion_instr2 -> tipo ID .)
     RPRINT          reduce using rule 24 (declaracion_instr2 -> tipo ID .)
@@ -1447,6 +1460,8 @@ state 49
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -1460,8 +1475,9 @@ state 49
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 73
+    expresion                      shift and go to state 74
     llamada_instr                  shift and go to state 63
 
 state 50
@@ -1556,10 +1572,12 @@ state 52
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
-    PARC            shift and go to state 74
+    PARC            shift and go to state 75
     MENOS           shift and go to state 60
     NOT             shift and go to state 61
     PARA            shift and go to state 62
@@ -1570,10 +1588,11 @@ state 52
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    parametros_llamada             shift and go to state 75
-    parametro_llamada              shift and go to state 76
-    expresion                      shift and go to state 77
+    parametros_llamada             shift and go to state 76
+    parametro_llamada              shift and go to state 77
+    expresion                      shift and go to state 78
     llamada_instr                  shift and go to state 63
 
 state 53
@@ -1608,6 +1627,8 @@ state 53
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -1621,8 +1642,9 @@ state 53
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 78
+    expresion                      shift and go to state 79
     llamada_instr                  shift and go to state 63
 
 state 54
@@ -1657,6 +1679,8 @@ state 54
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -1670,8 +1694,9 @@ state 54
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 79
+    expresion                      shift and go to state 80
     llamada_instr                  shift and go to state 63
 
 state 55
@@ -1704,6 +1729,8 @@ state 55
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -1717,8 +1744,9 @@ state 55
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 80
+    expresion                      shift and go to state 81
     llamada_instr                  shift and go to state 63
 
 state 56
@@ -1755,12 +1783,14 @@ state 56
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (42) tipo_declaracion_for -> . RINT
     (43) tipo_declaracion_for -> . RVAR
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
-    ID              shift and go to state 84
+    ID              shift and go to state 85
     MENOS           shift and go to state 60
     NOT             shift and go to state 61
     PARA            shift and go to state 62
@@ -1770,20 +1800,21 @@ state 56
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
-    RINT            shift and go to state 86
-    RVAR            shift and go to state 87
+    RREAD           shift and go to state 71
+    RINT            shift and go to state 87
+    RVAR            shift and go to state 88
 
-    asignacion_instr               shift and go to state 81
-    expresion                      shift and go to state 82
-    declaracion_for                shift and go to state 83
-    tipo_declaracion_for           shift and go to state 85
+    asignacion_instr               shift and go to state 82
+    expresion                      shift and go to state 83
+    declaracion_for                shift and go to state 84
+    tipo_declaracion_for           shift and go to state 86
     llamada_instr                  shift and go to state 63
 
 state 57
 
     (46) main_instr -> RMAIN PARA . PARC LLAVEA instrucciones LLAVEC
 
-    PARC            shift and go to state 88
+    PARC            shift and go to state 89
 
 
 state 58
@@ -1791,7 +1822,7 @@ state 58
     (47) funcion_instr -> RFUNC ID . PARA parametros PARC LLAVEA instrucciones LLAVEC
     (48) funcion_instr -> RFUNC ID . PARA PARC LLAVEA instrucciones LLAVEC
 
-    PARA            shift and go to state 89
+    PARA            shift and go to state 90
 
 
 state 59
@@ -1836,22 +1867,22 @@ state 59
     LLAVEC          reduce using rule 57 (return_instr -> RRETURN expresion .)
     RDEFAULT        reduce using rule 57 (return_instr -> RRETURN expresion .)
     RCASE           reduce using rule 57 (return_instr -> RRETURN expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
 state 60
@@ -1884,6 +1915,8 @@ state 60
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -1897,8 +1930,9 @@ state 60
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 106
+    expresion                      shift and go to state 107
     llamada_instr                  shift and go to state 63
 
 state 61
@@ -1931,6 +1965,8 @@ state 61
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -1944,13 +1980,15 @@ state 61
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 107
+    expresion                      shift and go to state 108
     llamada_instr                  shift and go to state 63
 
 state 62
 
     (82) expresion -> PARA . expresion PARC
+    (92) expresion -> PARA . tipo PARC expresion
     (64) expresion -> . expresion MAS expresion
     (65) expresion -> . expresion MENOS expresion
     (66) expresion -> . expresion POR expresion
@@ -1978,6 +2016,14 @@ state 62
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
+    (58) tipo -> . RINT
+    (59) tipo -> . RDOUBLE
+    (60) tipo -> . RSTRING
+    (61) tipo -> . RBOOLEAN
+    (62) tipo -> . RCHAR
+    (63) tipo -> . RVAR
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -1991,8 +2037,16 @@ state 62
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
+    RINT            shift and go to state 30
+    RDOUBLE         shift and go to state 31
+    RSTRING         shift and go to state 32
+    RBOOLEAN        shift and go to state 33
+    RCHAR           shift and go to state 34
+    RVAR            shift and go to state 35
 
-    expresion                      shift and go to state 108
+    expresion                      shift and go to state 109
+    tipo                           shift and go to state 110
     llamada_instr                  shift and go to state 63
 
 state 63
@@ -2376,6 +2430,13 @@ state 70
 
 state 71
 
+    (91) expresion -> RREAD . PARA PARC
+
+    PARA            shift and go to state 111
+
+
+state 72
+
     (22) imprimir_instr -> RPRINT PARA expresion . PARC
     (64) expresion -> expresion . MAS expresion
     (65) expresion -> expresion . MENOS expresion
@@ -2394,26 +2455,26 @@ state 71
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    PARC            shift and go to state 109
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    PARC            shift and go to state 112
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 72
+state 73
 
     (23) declaracion_instr -> tipo ID IGUAL . expresion
     (64) expresion -> . expresion MAS expresion
@@ -2443,6 +2504,8 @@ state 72
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -2456,11 +2519,12 @@ state 72
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 110
+    expresion                      shift and go to state 113
     llamada_instr                  shift and go to state 63
 
-state 73
+state 74
 
     (25) asignacion_instr -> ID IGUAL expresion .
     (64) expresion -> expresion . MAS expresion
@@ -2502,25 +2566,25 @@ state 73
     LLAVEC          reduce using rule 25 (asignacion_instr -> ID IGUAL expresion .)
     RDEFAULT        reduce using rule 25 (asignacion_instr -> ID IGUAL expresion .)
     RCASE           reduce using rule 25 (asignacion_instr -> ID IGUAL expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 74
+state 75
 
     (52) llamada_instr -> ID PARA PARC .
 
@@ -2567,16 +2631,16 @@ state 74
     DOSPUNTOS       reduce using rule 52 (llamada_instr -> ID PARA PARC .)
 
 
-state 75
+state 76
 
     (53) llamada_instr -> ID PARA parametros_llamada . PARC
     (54) parametros_llamada -> parametros_llamada . COMA parametro_llamada
 
-    PARC            shift and go to state 111
-    COMA            shift and go to state 112
+    PARC            shift and go to state 114
+    COMA            shift and go to state 115
 
 
-state 76
+state 77
 
     (55) parametros_llamada -> parametro_llamada .
 
@@ -2584,7 +2648,7 @@ state 76
     COMA            reduce using rule 55 (parametros_llamada -> parametro_llamada .)
 
 
-state 77
+state 78
 
     (56) parametro_llamada -> expresion .
     (64) expresion -> expresion . MAS expresion
@@ -2606,25 +2670,25 @@ state 77
 
     PARC            reduce using rule 56 (parametro_llamada -> expresion .)
     COMA            reduce using rule 56 (parametro_llamada -> expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 78
+state 79
 
     (28) if_instr -> RIF PARA expresion . PARC LLAVEA instrucciones LLAVEC
     (29) if_instr -> RIF PARA expresion . PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC
@@ -2646,26 +2710,26 @@ state 78
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    PARC            shift and go to state 113
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    PARC            shift and go to state 116
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 79
+state 80
 
     (31) switch_instr -> RSWITCH PARA expresion . PARC LLAVEA cases LLAVEC
     (32) switch_instr -> RSWITCH PARA expresion . PARC LLAVEA cases default LLAVEC
@@ -2687,26 +2751,26 @@ state 79
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    PARC            shift and go to state 114
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    PARC            shift and go to state 117
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 80
+state 81
 
     (44) while_instr -> RWHILE PARA expresion . PARC LLAVEA instrucciones LLAVEC
     (64) expresion -> expresion . MAS expresion
@@ -2726,33 +2790,33 @@ state 80
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    PARC            shift and go to state 115
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
-
-
-state 81
-
-    (38) for_instr -> RFOR PARA asignacion_instr . PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-
-    PUNTOCOMA       shift and go to state 116
+    PARC            shift and go to state 118
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
 state 82
+
+    (38) for_instr -> RFOR PARA asignacion_instr . PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+
+    PUNTOCOMA       shift and go to state 119
+
+
+state 83
 
     (40) for_instr -> RFOR PARA expresion . PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
     (64) expresion -> expresion . MAS expresion
@@ -2772,33 +2836,33 @@ state 82
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    PUNTOCOMA       shift and go to state 117
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
-
-
-state 83
-
-    (39) for_instr -> RFOR PARA declaracion_for . PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-
-    PUNTOCOMA       shift and go to state 118
+    PUNTOCOMA       shift and go to state 120
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
 state 84
+
+    (39) for_instr -> RFOR PARA declaracion_for . PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+
+    PUNTOCOMA       shift and go to state 121
+
+
+state 85
 
     (25) asignacion_instr -> ID . IGUAL expresion
     (84) expresion -> ID .
@@ -2826,35 +2890,35 @@ state 84
     PARA            shift and go to state 52
 
 
-state 85
+state 86
 
     (41) declaracion_for -> tipo_declaracion_for . ID IGUAL expresion
 
-    ID              shift and go to state 119
+    ID              shift and go to state 122
 
 
-state 86
+state 87
 
     (42) tipo_declaracion_for -> RINT .
 
     ID              reduce using rule 42 (tipo_declaracion_for -> RINT .)
 
 
-state 87
+state 88
 
     (43) tipo_declaracion_for -> RVAR .
 
     ID              reduce using rule 43 (tipo_declaracion_for -> RVAR .)
 
 
-state 88
+state 89
 
     (46) main_instr -> RMAIN PARA PARC . LLAVEA instrucciones LLAVEC
 
-    LLAVEA          shift and go to state 120
+    LLAVEA          shift and go to state 123
 
 
-state 89
+state 90
 
     (47) funcion_instr -> RFUNC ID PARA . parametros PARC LLAVEA instrucciones LLAVEC
     (48) funcion_instr -> RFUNC ID PARA . PARC LLAVEA instrucciones LLAVEC
@@ -2868,7 +2932,7 @@ state 89
     (62) tipo -> . RCHAR
     (63) tipo -> . RVAR
 
-    PARC            shift and go to state 122
+    PARC            shift and go to state 125
     RINT            shift and go to state 30
     RDOUBLE         shift and go to state 31
     RSTRING         shift and go to state 32
@@ -2876,11 +2940,11 @@ state 89
     RCHAR           shift and go to state 34
     RVAR            shift and go to state 35
 
-    parametros                     shift and go to state 121
-    parametro                      shift and go to state 123
-    tipo                           shift and go to state 124
+    parametros                     shift and go to state 124
+    parametro                      shift and go to state 126
+    tipo                           shift and go to state 127
 
-state 90
+state 91
 
     (64) expresion -> expresion MAS . expresion
     (64) expresion -> . expresion MAS expresion
@@ -2910,6 +2974,8 @@ state 90
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -2923,11 +2989,12 @@ state 90
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 125
+    expresion                      shift and go to state 128
     llamada_instr                  shift and go to state 63
 
-state 91
+state 92
 
     (65) expresion -> expresion MENOS . expresion
     (64) expresion -> . expresion MAS expresion
@@ -2957,6 +3024,8 @@ state 91
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -2970,11 +3039,12 @@ state 91
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 126
+    expresion                      shift and go to state 129
     llamada_instr                  shift and go to state 63
 
-state 92
+state 93
 
     (66) expresion -> expresion POR . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3004,6 +3074,8 @@ state 92
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3017,11 +3089,12 @@ state 92
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 127
+    expresion                      shift and go to state 130
     llamada_instr                  shift and go to state 63
 
-state 93
+state 94
 
     (67) expresion -> expresion DIV . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3051,6 +3124,8 @@ state 93
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3064,11 +3139,12 @@ state 93
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 128
+    expresion                      shift and go to state 131
     llamada_instr                  shift and go to state 63
 
-state 94
+state 95
 
     (68) expresion -> expresion POT . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3098,6 +3174,8 @@ state 94
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3111,11 +3189,12 @@ state 94
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 129
+    expresion                      shift and go to state 132
     llamada_instr                  shift and go to state 63
 
-state 95
+state 96
 
     (69) expresion -> expresion MOD . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3145,6 +3224,8 @@ state 95
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3158,11 +3239,12 @@ state 95
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 130
+    expresion                      shift and go to state 133
     llamada_instr                  shift and go to state 63
 
-state 96
+state 97
 
     (70) expresion -> expresion MENORQUE . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3192,6 +3274,8 @@ state 96
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3205,11 +3289,12 @@ state 96
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 131
+    expresion                      shift and go to state 134
     llamada_instr                  shift and go to state 63
 
-state 97
+state 98
 
     (71) expresion -> expresion MAYORQUE . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3239,6 +3324,8 @@ state 97
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3252,11 +3339,12 @@ state 97
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 132
+    expresion                      shift and go to state 135
     llamada_instr                  shift and go to state 63
 
-state 98
+state 99
 
     (72) expresion -> expresion IGUALIGUAL . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3286,6 +3374,8 @@ state 98
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3299,11 +3389,12 @@ state 98
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 133
+    expresion                      shift and go to state 136
     llamada_instr                  shift and go to state 63
 
-state 99
+state 100
 
     (73) expresion -> expresion DIFERENTE . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3333,6 +3424,8 @@ state 99
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3346,11 +3439,12 @@ state 99
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 134
+    expresion                      shift and go to state 137
     llamada_instr                  shift and go to state 63
 
-state 100
+state 101
 
     (74) expresion -> expresion MENORIGUAL . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3380,6 +3474,8 @@ state 100
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3393,11 +3489,12 @@ state 100
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 135
+    expresion                      shift and go to state 138
     llamada_instr                  shift and go to state 63
 
-state 101
+state 102
 
     (75) expresion -> expresion MAYORIGUAL . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3427,6 +3524,8 @@ state 101
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3440,11 +3539,12 @@ state 101
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 136
+    expresion                      shift and go to state 139
     llamada_instr                  shift and go to state 63
 
-state 102
+state 103
 
     (76) expresion -> expresion AND . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3474,6 +3574,8 @@ state 102
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3487,11 +3589,12 @@ state 102
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 137
+    expresion                      shift and go to state 140
     llamada_instr                  shift and go to state 63
 
-state 103
+state 104
 
     (77) expresion -> expresion OR . expresion
     (64) expresion -> . expresion MAS expresion
@@ -3521,6 +3624,8 @@ state 103
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -3534,11 +3639,12 @@ state 103
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 138
+    expresion                      shift and go to state 141
     llamada_instr                  shift and go to state 63
 
-state 104
+state 105
 
     (78) expresion -> expresion MASMAS .
 
@@ -3585,7 +3691,7 @@ state 104
     DOSPUNTOS       reduce using rule 78 (expresion -> expresion MASMAS .)
 
 
-state 105
+state 106
 
     (79) expresion -> expresion MENOSMENOS .
 
@@ -3632,7 +3738,7 @@ state 105
     DOSPUNTOS       reduce using rule 79 (expresion -> expresion MENOSMENOS .)
 
 
-state 106
+state 107
 
     (80) expresion -> MENOS expresion .
     (64) expresion -> expresion . MAS expresion
@@ -3691,28 +3797,28 @@ state 106
     PARC            reduce using rule 80 (expresion -> MENOS expresion .)
     COMA            reduce using rule 80 (expresion -> MENOS expresion .)
     DOSPUNTOS       reduce using rule 80 (expresion -> MENOS expresion .)
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MASMAS          [ reduce using rule 80 (expresion -> MENOS expresion .) ]
   ! MENOSMENOS      [ reduce using rule 80 (expresion -> MENOS expresion .) ]
-  ! MAS             [ shift and go to state 90 ]
-  ! MENOS           [ shift and go to state 91 ]
-  ! POR             [ shift and go to state 92 ]
-  ! DIV             [ shift and go to state 93 ]
-  ! POT             [ shift and go to state 94 ]
-  ! MOD             [ shift and go to state 95 ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MAS             [ shift and go to state 91 ]
+  ! MENOS           [ shift and go to state 92 ]
+  ! POR             [ shift and go to state 93 ]
+  ! DIV             [ shift and go to state 94 ]
+  ! POT             [ shift and go to state 95 ]
+  ! MOD             [ shift and go to state 96 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 107
+state 108
 
     (81) expresion -> NOT expresion .
     (64) expresion -> expresion . MAS expresion
@@ -3759,20 +3865,20 @@ state 107
     PARC            reduce using rule 81 (expresion -> NOT expresion .)
     COMA            reduce using rule 81 (expresion -> NOT expresion .)
     DOSPUNTOS       reduce using rule 81 (expresion -> NOT expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MAS             [ reduce using rule 81 (expresion -> NOT expresion .) ]
   ! MENOS           [ reduce using rule 81 (expresion -> NOT expresion .) ]
@@ -3788,11 +3894,11 @@ state 107
   ! MAYORIGUAL      [ reduce using rule 81 (expresion -> NOT expresion .) ]
   ! MASMAS          [ reduce using rule 81 (expresion -> NOT expresion .) ]
   ! MENOSMENOS      [ reduce using rule 81 (expresion -> NOT expresion .) ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 108
+state 109
 
     (82) expresion -> PARA expresion . PARC
     (64) expresion -> expresion . MAS expresion
@@ -3812,26 +3918,40 @@ state 108
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    PARC            shift and go to state 139
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    PARC            shift and go to state 142
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 109
+state 110
+
+    (92) expresion -> PARA tipo . PARC expresion
+
+    PARC            shift and go to state 143
+
+
+state 111
+
+    (91) expresion -> RREAD PARA . PARC
+
+    PARC            shift and go to state 144
+
+
+state 112
 
     (22) imprimir_instr -> RPRINT PARA expresion PARC .
 
@@ -3859,7 +3979,7 @@ state 109
     RCASE           reduce using rule 22 (imprimir_instr -> RPRINT PARA expresion PARC .)
 
 
-state 110
+state 113
 
     (23) declaracion_instr -> tipo ID IGUAL expresion .
     (64) expresion -> expresion . MAS expresion
@@ -3901,25 +4021,25 @@ state 110
     LLAVEC          reduce using rule 23 (declaracion_instr -> tipo ID IGUAL expresion .)
     RDEFAULT        reduce using rule 23 (declaracion_instr -> tipo ID IGUAL expresion .)
     RCASE           reduce using rule 23 (declaracion_instr -> tipo ID IGUAL expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 111
+state 114
 
     (53) llamada_instr -> ID PARA parametros_llamada PARC .
 
@@ -3966,7 +4086,7 @@ state 111
     DOSPUNTOS       reduce using rule 53 (llamada_instr -> ID PARA parametros_llamada PARC .)
 
 
-state 112
+state 115
 
     (54) parametros_llamada -> parametros_llamada COMA . parametro_llamada
     (56) parametro_llamada -> . expresion
@@ -3997,6 +4117,8 @@ state 112
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -4010,37 +4132,38 @@ state 112
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    parametro_llamada              shift and go to state 140
-    expresion                      shift and go to state 77
+    parametro_llamada              shift and go to state 145
+    expresion                      shift and go to state 78
     llamada_instr                  shift and go to state 63
 
-state 113
+state 116
 
     (28) if_instr -> RIF PARA expresion PARC . LLAVEA instrucciones LLAVEC
     (29) if_instr -> RIF PARA expresion PARC . LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC
     (30) if_instr -> RIF PARA expresion PARC . LLAVEA instrucciones LLAVEC RELSE if_instr
 
-    LLAVEA          shift and go to state 141
+    LLAVEA          shift and go to state 146
 
 
-state 114
+state 117
 
     (31) switch_instr -> RSWITCH PARA expresion PARC . LLAVEA cases LLAVEC
     (32) switch_instr -> RSWITCH PARA expresion PARC . LLAVEA cases default LLAVEC
     (33) switch_instr -> RSWITCH PARA expresion PARC . LLAVEA default LLAVEC
 
-    LLAVEA          shift and go to state 142
+    LLAVEA          shift and go to state 147
 
 
-state 115
+state 118
 
     (44) while_instr -> RWHILE PARA expresion PARC . LLAVEA instrucciones LLAVEC
 
-    LLAVEA          shift and go to state 143
+    LLAVEA          shift and go to state 148
 
 
-state 116
+state 119
 
     (38) for_instr -> RFOR PARA asignacion_instr PUNTOCOMA . expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
     (64) expresion -> . expresion MAS expresion
@@ -4070,6 +4193,8 @@ state 116
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -4083,11 +4208,12 @@ state 116
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 144
+    expresion                      shift and go to state 149
     llamada_instr                  shift and go to state 63
 
-state 117
+state 120
 
     (40) for_instr -> RFOR PARA expresion PUNTOCOMA . expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
     (64) expresion -> . expresion MAS expresion
@@ -4117,6 +4243,8 @@ state 117
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -4130,11 +4258,12 @@ state 117
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 145
+    expresion                      shift and go to state 150
     llamada_instr                  shift and go to state 63
 
-state 118
+state 121
 
     (39) for_instr -> RFOR PARA declaracion_for PUNTOCOMA . expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
     (64) expresion -> . expresion MAS expresion
@@ -4164,6 +4293,8 @@ state 118
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -4177,18 +4308,19 @@ state 118
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 146
+    expresion                      shift and go to state 151
     llamada_instr                  shift and go to state 63
 
-state 119
+state 122
 
     (41) declaracion_for -> tipo_declaracion_for ID . IGUAL expresion
 
-    IGUAL           shift and go to state 147
+    IGUAL           shift and go to state 152
 
 
-state 120
+state 123
 
     (46) main_instr -> RMAIN PARA PARC LLAVEA . instrucciones LLAVEC
     (2) instrucciones -> . instrucciones instruccion
@@ -4257,7 +4389,7 @@ state 120
     RCHAR           shift and go to state 34
     RVAR            shift and go to state 35
 
-    instrucciones                  shift and go to state 148
+    instrucciones                  shift and go to state 153
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     declaracion_instr              shift and go to state 5
@@ -4275,23 +4407,23 @@ state 120
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 121
+state 124
 
     (47) funcion_instr -> RFUNC ID PARA parametros . PARC LLAVEA instrucciones LLAVEC
     (49) parametros -> parametros . COMA parametro
 
-    PARC            shift and go to state 149
-    COMA            shift and go to state 150
+    PARC            shift and go to state 154
+    COMA            shift and go to state 155
 
 
-state 122
+state 125
 
     (48) funcion_instr -> RFUNC ID PARA PARC . LLAVEA instrucciones LLAVEC
 
-    LLAVEA          shift and go to state 151
+    LLAVEA          shift and go to state 156
 
 
-state 123
+state 126
 
     (50) parametros -> parametro .
 
@@ -4299,14 +4431,14 @@ state 123
     COMA            reduce using rule 50 (parametros -> parametro .)
 
 
-state 124
+state 127
 
     (51) parametro -> tipo . ID
 
-    ID              shift and go to state 152
+    ID              shift and go to state 157
 
 
-state 125
+state 128
 
     (64) expresion -> expresion MAS expresion .
     (64) expresion -> expresion . MAS expresion
@@ -4361,12 +4493,12 @@ state 125
     PARC            reduce using rule 64 (expresion -> expresion MAS expresion .)
     COMA            reduce using rule 64 (expresion -> expresion MAS expresion .)
     DOSPUNTOS       reduce using rule 64 (expresion -> expresion MAS expresion .)
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! POR             [ reduce using rule 64 (expresion -> expresion MAS expresion .) ]
   ! DIV             [ reduce using rule 64 (expresion -> expresion MAS expresion .) ]
@@ -4374,19 +4506,19 @@ state 125
   ! MOD             [ reduce using rule 64 (expresion -> expresion MAS expresion .) ]
   ! MASMAS          [ reduce using rule 64 (expresion -> expresion MAS expresion .) ]
   ! MENOSMENOS      [ reduce using rule 64 (expresion -> expresion MAS expresion .) ]
-  ! MAS             [ shift and go to state 90 ]
-  ! MENOS           [ shift and go to state 91 ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MAS             [ shift and go to state 91 ]
+  ! MENOS           [ shift and go to state 92 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 126
+state 129
 
     (65) expresion -> expresion MENOS expresion .
     (64) expresion -> expresion . MAS expresion
@@ -4441,12 +4573,12 @@ state 126
     PARC            reduce using rule 65 (expresion -> expresion MENOS expresion .)
     COMA            reduce using rule 65 (expresion -> expresion MENOS expresion .)
     DOSPUNTOS       reduce using rule 65 (expresion -> expresion MENOS expresion .)
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! POR             [ reduce using rule 65 (expresion -> expresion MENOS expresion .) ]
   ! DIV             [ reduce using rule 65 (expresion -> expresion MENOS expresion .) ]
@@ -4454,19 +4586,19 @@ state 126
   ! MOD             [ reduce using rule 65 (expresion -> expresion MENOS expresion .) ]
   ! MASMAS          [ reduce using rule 65 (expresion -> expresion MENOS expresion .) ]
   ! MENOSMENOS      [ reduce using rule 65 (expresion -> expresion MENOS expresion .) ]
-  ! MAS             [ shift and go to state 90 ]
-  ! MENOS           [ shift and go to state 91 ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MAS             [ shift and go to state 91 ]
+  ! MENOS           [ shift and go to state 92 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 127
+state 130
 
     (66) expresion -> expresion POR expresion .
     (64) expresion -> expresion . MAS expresion
@@ -4524,29 +4656,29 @@ state 127
     PARC            reduce using rule 66 (expresion -> expresion POR expresion .)
     COMA            reduce using rule 66 (expresion -> expresion POR expresion .)
     DOSPUNTOS       reduce using rule 66 (expresion -> expresion POR expresion .)
-    POT             shift and go to state 94
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    POT             shift and go to state 95
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! POT             [ reduce using rule 66 (expresion -> expresion POR expresion .) ]
   ! MASMAS          [ reduce using rule 66 (expresion -> expresion POR expresion .) ]
   ! MENOSMENOS      [ reduce using rule 66 (expresion -> expresion POR expresion .) ]
-  ! MAS             [ shift and go to state 90 ]
-  ! MENOS           [ shift and go to state 91 ]
-  ! POR             [ shift and go to state 92 ]
-  ! DIV             [ shift and go to state 93 ]
-  ! MOD             [ shift and go to state 95 ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MAS             [ shift and go to state 91 ]
+  ! MENOS           [ shift and go to state 92 ]
+  ! POR             [ shift and go to state 93 ]
+  ! DIV             [ shift and go to state 94 ]
+  ! MOD             [ shift and go to state 96 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 128
+state 131
 
     (67) expresion -> expresion DIV expresion .
     (64) expresion -> expresion . MAS expresion
@@ -4604,29 +4736,29 @@ state 128
     PARC            reduce using rule 67 (expresion -> expresion DIV expresion .)
     COMA            reduce using rule 67 (expresion -> expresion DIV expresion .)
     DOSPUNTOS       reduce using rule 67 (expresion -> expresion DIV expresion .)
-    POT             shift and go to state 94
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    POT             shift and go to state 95
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! POT             [ reduce using rule 67 (expresion -> expresion DIV expresion .) ]
   ! MASMAS          [ reduce using rule 67 (expresion -> expresion DIV expresion .) ]
   ! MENOSMENOS      [ reduce using rule 67 (expresion -> expresion DIV expresion .) ]
-  ! MAS             [ shift and go to state 90 ]
-  ! MENOS           [ shift and go to state 91 ]
-  ! POR             [ shift and go to state 92 ]
-  ! DIV             [ shift and go to state 93 ]
-  ! MOD             [ shift and go to state 95 ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MAS             [ shift and go to state 91 ]
+  ! MENOS           [ shift and go to state 92 ]
+  ! POR             [ shift and go to state 93 ]
+  ! DIV             [ shift and go to state 94 ]
+  ! MOD             [ shift and go to state 96 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 129
+state 132
 
     (68) expresion -> expresion POT expresion .
     (64) expresion -> expresion . MAS expresion
@@ -4685,28 +4817,28 @@ state 129
     PARC            reduce using rule 68 (expresion -> expresion POT expresion .)
     COMA            reduce using rule 68 (expresion -> expresion POT expresion .)
     DOSPUNTOS       reduce using rule 68 (expresion -> expresion POT expresion .)
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MASMAS          [ reduce using rule 68 (expresion -> expresion POT expresion .) ]
   ! MENOSMENOS      [ reduce using rule 68 (expresion -> expresion POT expresion .) ]
-  ! MAS             [ shift and go to state 90 ]
-  ! MENOS           [ shift and go to state 91 ]
-  ! POR             [ shift and go to state 92 ]
-  ! DIV             [ shift and go to state 93 ]
-  ! POT             [ shift and go to state 94 ]
-  ! MOD             [ shift and go to state 95 ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MAS             [ shift and go to state 91 ]
+  ! MENOS           [ shift and go to state 92 ]
+  ! POR             [ shift and go to state 93 ]
+  ! DIV             [ shift and go to state 94 ]
+  ! POT             [ shift and go to state 95 ]
+  ! MOD             [ shift and go to state 96 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 130
+state 133
 
     (69) expresion -> expresion MOD expresion .
     (64) expresion -> expresion . MAS expresion
@@ -4764,29 +4896,29 @@ state 130
     PARC            reduce using rule 69 (expresion -> expresion MOD expresion .)
     COMA            reduce using rule 69 (expresion -> expresion MOD expresion .)
     DOSPUNTOS       reduce using rule 69 (expresion -> expresion MOD expresion .)
-    POT             shift and go to state 94
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    POT             shift and go to state 95
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! POT             [ reduce using rule 69 (expresion -> expresion MOD expresion .) ]
   ! MASMAS          [ reduce using rule 69 (expresion -> expresion MOD expresion .) ]
   ! MENOSMENOS      [ reduce using rule 69 (expresion -> expresion MOD expresion .) ]
-  ! MAS             [ shift and go to state 90 ]
-  ! MENOS           [ shift and go to state 91 ]
-  ! POR             [ shift and go to state 92 ]
-  ! DIV             [ shift and go to state 93 ]
-  ! MOD             [ shift and go to state 95 ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MAS             [ shift and go to state 91 ]
+  ! MENOS           [ shift and go to state 92 ]
+  ! POR             [ shift and go to state 93 ]
+  ! DIV             [ shift and go to state 94 ]
+  ! MOD             [ shift and go to state 96 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 131
+state 134
 
     (70) expresion -> expresion MENORQUE expresion .
     (64) expresion -> expresion . MAS expresion
@@ -4839,14 +4971,14 @@ state 131
     PARC            reduce using rule 70 (expresion -> expresion MENORQUE expresion .)
     COMA            reduce using rule 70 (expresion -> expresion MENORQUE expresion .)
     DOSPUNTOS       reduce using rule 70 (expresion -> expresion MENORQUE expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MAS             [ reduce using rule 70 (expresion -> expresion MENORQUE expresion .) ]
   ! MENOS           [ reduce using rule 70 (expresion -> expresion MENORQUE expresion .) ]
@@ -4856,17 +4988,17 @@ state 131
   ! MOD             [ reduce using rule 70 (expresion -> expresion MENORQUE expresion .) ]
   ! MASMAS          [ reduce using rule 70 (expresion -> expresion MENORQUE expresion .) ]
   ! MENOSMENOS      [ reduce using rule 70 (expresion -> expresion MENORQUE expresion .) ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 132
+state 135
 
     (71) expresion -> expresion MAYORQUE expresion .
     (64) expresion -> expresion . MAS expresion
@@ -4919,14 +5051,14 @@ state 132
     PARC            reduce using rule 71 (expresion -> expresion MAYORQUE expresion .)
     COMA            reduce using rule 71 (expresion -> expresion MAYORQUE expresion .)
     DOSPUNTOS       reduce using rule 71 (expresion -> expresion MAYORQUE expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MAS             [ reduce using rule 71 (expresion -> expresion MAYORQUE expresion .) ]
   ! MENOS           [ reduce using rule 71 (expresion -> expresion MAYORQUE expresion .) ]
@@ -4936,17 +5068,17 @@ state 132
   ! MOD             [ reduce using rule 71 (expresion -> expresion MAYORQUE expresion .) ]
   ! MASMAS          [ reduce using rule 71 (expresion -> expresion MAYORQUE expresion .) ]
   ! MENOSMENOS      [ reduce using rule 71 (expresion -> expresion MAYORQUE expresion .) ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 133
+state 136
 
     (72) expresion -> expresion IGUALIGUAL expresion .
     (64) expresion -> expresion . MAS expresion
@@ -4999,14 +5131,14 @@ state 133
     PARC            reduce using rule 72 (expresion -> expresion IGUALIGUAL expresion .)
     COMA            reduce using rule 72 (expresion -> expresion IGUALIGUAL expresion .)
     DOSPUNTOS       reduce using rule 72 (expresion -> expresion IGUALIGUAL expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MAS             [ reduce using rule 72 (expresion -> expresion IGUALIGUAL expresion .) ]
   ! MENOS           [ reduce using rule 72 (expresion -> expresion IGUALIGUAL expresion .) ]
@@ -5016,17 +5148,17 @@ state 133
   ! MOD             [ reduce using rule 72 (expresion -> expresion IGUALIGUAL expresion .) ]
   ! MASMAS          [ reduce using rule 72 (expresion -> expresion IGUALIGUAL expresion .) ]
   ! MENOSMENOS      [ reduce using rule 72 (expresion -> expresion IGUALIGUAL expresion .) ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 134
+state 137
 
     (73) expresion -> expresion DIFERENTE expresion .
     (64) expresion -> expresion . MAS expresion
@@ -5079,14 +5211,14 @@ state 134
     PARC            reduce using rule 73 (expresion -> expresion DIFERENTE expresion .)
     COMA            reduce using rule 73 (expresion -> expresion DIFERENTE expresion .)
     DOSPUNTOS       reduce using rule 73 (expresion -> expresion DIFERENTE expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MAS             [ reduce using rule 73 (expresion -> expresion DIFERENTE expresion .) ]
   ! MENOS           [ reduce using rule 73 (expresion -> expresion DIFERENTE expresion .) ]
@@ -5096,17 +5228,17 @@ state 134
   ! MOD             [ reduce using rule 73 (expresion -> expresion DIFERENTE expresion .) ]
   ! MASMAS          [ reduce using rule 73 (expresion -> expresion DIFERENTE expresion .) ]
   ! MENOSMENOS      [ reduce using rule 73 (expresion -> expresion DIFERENTE expresion .) ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 135
+state 138
 
     (74) expresion -> expresion MENORIGUAL expresion .
     (64) expresion -> expresion . MAS expresion
@@ -5159,14 +5291,14 @@ state 135
     PARC            reduce using rule 74 (expresion -> expresion MENORIGUAL expresion .)
     COMA            reduce using rule 74 (expresion -> expresion MENORIGUAL expresion .)
     DOSPUNTOS       reduce using rule 74 (expresion -> expresion MENORIGUAL expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MAS             [ reduce using rule 74 (expresion -> expresion MENORIGUAL expresion .) ]
   ! MENOS           [ reduce using rule 74 (expresion -> expresion MENORIGUAL expresion .) ]
@@ -5176,17 +5308,17 @@ state 135
   ! MOD             [ reduce using rule 74 (expresion -> expresion MENORIGUAL expresion .) ]
   ! MASMAS          [ reduce using rule 74 (expresion -> expresion MENORIGUAL expresion .) ]
   ! MENOSMENOS      [ reduce using rule 74 (expresion -> expresion MENORIGUAL expresion .) ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 136
+state 139
 
     (75) expresion -> expresion MAYORIGUAL expresion .
     (64) expresion -> expresion . MAS expresion
@@ -5239,14 +5371,14 @@ state 136
     PARC            reduce using rule 75 (expresion -> expresion MAYORIGUAL expresion .)
     COMA            reduce using rule 75 (expresion -> expresion MAYORIGUAL expresion .)
     DOSPUNTOS       reduce using rule 75 (expresion -> expresion MAYORIGUAL expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MAS             [ reduce using rule 75 (expresion -> expresion MAYORIGUAL expresion .) ]
   ! MENOS           [ reduce using rule 75 (expresion -> expresion MAYORIGUAL expresion .) ]
@@ -5256,17 +5388,17 @@ state 136
   ! MOD             [ reduce using rule 75 (expresion -> expresion MAYORIGUAL expresion .) ]
   ! MASMAS          [ reduce using rule 75 (expresion -> expresion MAYORIGUAL expresion .) ]
   ! MENOSMENOS      [ reduce using rule 75 (expresion -> expresion MAYORIGUAL expresion .) ]
-  ! MENORQUE        [ shift and go to state 96 ]
-  ! MAYORQUE        [ shift and go to state 97 ]
-  ! IGUALIGUAL      [ shift and go to state 98 ]
-  ! DIFERENTE       [ shift and go to state 99 ]
-  ! MENORIGUAL      [ shift and go to state 100 ]
-  ! MAYORIGUAL      [ shift and go to state 101 ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! MENORQUE        [ shift and go to state 97 ]
+  ! MAYORQUE        [ shift and go to state 98 ]
+  ! IGUALIGUAL      [ shift and go to state 99 ]
+  ! DIFERENTE       [ shift and go to state 100 ]
+  ! MENORIGUAL      [ shift and go to state 101 ]
+  ! MAYORIGUAL      [ shift and go to state 102 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 137
+state 140
 
     (76) expresion -> expresion AND expresion .
     (64) expresion -> expresion . MAS expresion
@@ -5313,20 +5445,20 @@ state 137
     PARC            reduce using rule 76 (expresion -> expresion AND expresion .)
     COMA            reduce using rule 76 (expresion -> expresion AND expresion .)
     DOSPUNTOS       reduce using rule 76 (expresion -> expresion AND expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MAS             [ reduce using rule 76 (expresion -> expresion AND expresion .) ]
   ! MENOS           [ reduce using rule 76 (expresion -> expresion AND expresion .) ]
@@ -5342,11 +5474,11 @@ state 137
   ! MAYORIGUAL      [ reduce using rule 76 (expresion -> expresion AND expresion .) ]
   ! MASMAS          [ reduce using rule 76 (expresion -> expresion AND expresion .) ]
   ! MENOSMENOS      [ reduce using rule 76 (expresion -> expresion AND expresion .) ]
-  ! AND             [ shift and go to state 102 ]
-  ! OR              [ shift and go to state 103 ]
+  ! AND             [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 138
+state 141
 
     (77) expresion -> expresion OR expresion .
     (64) expresion -> expresion . MAS expresion
@@ -5392,21 +5524,21 @@ state 138
     PARC            reduce using rule 77 (expresion -> expresion OR expresion .)
     COMA            reduce using rule 77 (expresion -> expresion OR expresion .)
     DOSPUNTOS       reduce using rule 77 (expresion -> expresion OR expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
   ! MAS             [ reduce using rule 77 (expresion -> expresion OR expresion .) ]
   ! MENOS           [ reduce using rule 77 (expresion -> expresion OR expresion .) ]
@@ -5423,10 +5555,10 @@ state 138
   ! AND             [ reduce using rule 77 (expresion -> expresion OR expresion .) ]
   ! MASMAS          [ reduce using rule 77 (expresion -> expresion OR expresion .) ]
   ! MENOSMENOS      [ reduce using rule 77 (expresion -> expresion OR expresion .) ]
-  ! OR              [ shift and go to state 103 ]
+  ! OR              [ shift and go to state 104 ]
 
 
-state 139
+state 142
 
     (82) expresion -> PARA expresion PARC .
 
@@ -5473,7 +5605,104 @@ state 139
     DOSPUNTOS       reduce using rule 82 (expresion -> PARA expresion PARC .)
 
 
-state 140
+state 143
+
+    (92) expresion -> PARA tipo PARC . expresion
+    (64) expresion -> . expresion MAS expresion
+    (65) expresion -> . expresion MENOS expresion
+    (66) expresion -> . expresion POR expresion
+    (67) expresion -> . expresion DIV expresion
+    (68) expresion -> . expresion POT expresion
+    (69) expresion -> . expresion MOD expresion
+    (70) expresion -> . expresion MENORQUE expresion
+    (71) expresion -> . expresion MAYORQUE expresion
+    (72) expresion -> . expresion IGUALIGUAL expresion
+    (73) expresion -> . expresion DIFERENTE expresion
+    (74) expresion -> . expresion MENORIGUAL expresion
+    (75) expresion -> . expresion MAYORIGUAL expresion
+    (76) expresion -> . expresion AND expresion
+    (77) expresion -> . expresion OR expresion
+    (78) expresion -> . expresion MASMAS
+    (79) expresion -> . expresion MENOSMENOS
+    (80) expresion -> . MENOS expresion
+    (81) expresion -> . NOT expresion
+    (82) expresion -> . PARA expresion PARC
+    (83) expresion -> . llamada_instr
+    (84) expresion -> . ID
+    (85) expresion -> . ENTERO
+    (86) expresion -> . DECIMAL
+    (87) expresion -> . CADENA
+    (88) expresion -> . BOOLEANO
+    (89) expresion -> . CARACTER
+    (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
+    (52) llamada_instr -> . ID PARA PARC
+    (53) llamada_instr -> . ID PARA parametros_llamada PARC
+
+    MENOS           shift and go to state 60
+    NOT             shift and go to state 61
+    PARA            shift and go to state 62
+    ID              shift and go to state 64
+    ENTERO          shift and go to state 65
+    DECIMAL         shift and go to state 66
+    CADENA          shift and go to state 67
+    BOOLEANO        shift and go to state 68
+    CARACTER        shift and go to state 69
+    RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
+
+    expresion                      shift and go to state 158
+    llamada_instr                  shift and go to state 63
+
+state 144
+
+    (91) expresion -> RREAD PARA PARC .
+
+    MAS             reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    MENOS           reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    POR             reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    DIV             reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    POT             reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    MOD             reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    MENORQUE        reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    MAYORQUE        reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    IGUALIGUAL      reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    DIFERENTE       reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    MENORIGUAL      reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    MAYORIGUAL      reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    AND             reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    OR              reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    MASMAS          reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    MENOSMENOS      reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    PUNTOCOMA       reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    error           reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RPRINT          reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    ID              reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RIF             reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RSWITCH         reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RWHILE          reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RBREAK          reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RFOR            reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RMAIN           reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RFUNC           reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RRETURN         reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RINT            reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RDOUBLE         reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RSTRING         reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RBOOLEAN        reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RCHAR           reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RVAR            reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    $end            reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    LLAVEC          reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RDEFAULT        reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    RCASE           reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    PARC            reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    COMA            reduce using rule 91 (expresion -> RREAD PARA PARC .)
+    DOSPUNTOS       reduce using rule 91 (expresion -> RREAD PARA PARC .)
+
+
+state 145
 
     (54) parametros_llamada -> parametros_llamada COMA parametro_llamada .
 
@@ -5481,7 +5710,7 @@ state 140
     COMA            reduce using rule 54 (parametros_llamada -> parametros_llamada COMA parametro_llamada .)
 
 
-state 141
+state 146
 
     (28) if_instr -> RIF PARA expresion PARC LLAVEA . instrucciones LLAVEC
     (29) if_instr -> RIF PARA expresion PARC LLAVEA . instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC
@@ -5552,7 +5781,7 @@ state 141
     RCHAR           shift and go to state 34
     RVAR            shift and go to state 35
 
-    instrucciones                  shift and go to state 153
+    instrucciones                  shift and go to state 159
     if_instr                       shift and go to state 9
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
@@ -5570,7 +5799,7 @@ state 141
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 142
+state 147
 
     (31) switch_instr -> RSWITCH PARA expresion PARC LLAVEA . cases LLAVEC
     (32) switch_instr -> RSWITCH PARA expresion PARC LLAVEA . cases default LLAVEC
@@ -5580,14 +5809,14 @@ state 142
     (37) default -> . RDEFAULT DOSPUNTOS instrucciones
     (36) case -> . RCASE expresion DOSPUNTOS instrucciones
 
-    RDEFAULT        shift and go to state 157
-    RCASE           shift and go to state 158
+    RDEFAULT        shift and go to state 163
+    RCASE           shift and go to state 164
 
-    cases                          shift and go to state 154
-    default                        shift and go to state 155
-    case                           shift and go to state 156
+    cases                          shift and go to state 160
+    default                        shift and go to state 161
+    case                           shift and go to state 162
 
-state 143
+state 148
 
     (44) while_instr -> RWHILE PARA expresion PARC LLAVEA . instrucciones LLAVEC
     (2) instrucciones -> . instrucciones instruccion
@@ -5656,7 +5885,7 @@ state 143
     RCHAR           shift and go to state 34
     RVAR            shift and go to state 35
 
-    instrucciones                  shift and go to state 159
+    instrucciones                  shift and go to state 165
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     declaracion_instr              shift and go to state 5
@@ -5674,7 +5903,7 @@ state 143
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 144
+state 149
 
     (38) for_instr -> RFOR PARA asignacion_instr PUNTOCOMA expresion . PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
     (64) expresion -> expresion . MAS expresion
@@ -5694,26 +5923,26 @@ state 144
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    PUNTOCOMA       shift and go to state 160
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    PUNTOCOMA       shift and go to state 166
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 145
+state 150
 
     (40) for_instr -> RFOR PARA expresion PUNTOCOMA expresion . PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
     (64) expresion -> expresion . MAS expresion
@@ -5733,26 +5962,26 @@ state 145
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    PUNTOCOMA       shift and go to state 161
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    PUNTOCOMA       shift and go to state 167
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 146
+state 151
 
     (39) for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion . PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
     (64) expresion -> expresion . MAS expresion
@@ -5772,26 +6001,26 @@ state 146
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    PUNTOCOMA       shift and go to state 162
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    PUNTOCOMA       shift and go to state 168
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 147
+state 152
 
     (41) declaracion_for -> tipo_declaracion_for ID IGUAL . expresion
     (64) expresion -> . expresion MAS expresion
@@ -5821,6 +6050,8 @@ state 147
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -5834,11 +6065,12 @@ state 147
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 163
+    expresion                      shift and go to state 169
     llamada_instr                  shift and go to state 63
 
-state 148
+state 153
 
     (46) main_instr -> RMAIN PARA PARC LLAVEA instrucciones . LLAVEC
     (2) instrucciones -> instrucciones . instruccion
@@ -5888,7 +6120,7 @@ state 148
     (62) tipo -> . RCHAR
     (63) tipo -> . RVAR
 
-    LLAVEC          shift and go to state 164
+    LLAVEC          shift and go to state 170
     error           shift and go to state 18
     RPRINT          shift and go to state 19
     ID              shift and go to state 21
@@ -5924,14 +6156,14 @@ state 148
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 149
+state 154
 
     (47) funcion_instr -> RFUNC ID PARA parametros PARC . LLAVEA instrucciones LLAVEC
 
-    LLAVEA          shift and go to state 165
+    LLAVEA          shift and go to state 171
 
 
-state 150
+state 155
 
     (49) parametros -> parametros COMA . parametro
     (51) parametro -> . tipo ID
@@ -5949,10 +6181,10 @@ state 150
     RCHAR           shift and go to state 34
     RVAR            shift and go to state 35
 
-    parametro                      shift and go to state 166
-    tipo                           shift and go to state 124
+    parametro                      shift and go to state 172
+    tipo                           shift and go to state 127
 
-state 151
+state 156
 
     (48) funcion_instr -> RFUNC ID PARA PARC LLAVEA . instrucciones LLAVEC
     (2) instrucciones -> . instrucciones instruccion
@@ -6021,7 +6253,7 @@ state 151
     RCHAR           shift and go to state 34
     RVAR            shift and go to state 35
 
-    instrucciones                  shift and go to state 167
+    instrucciones                  shift and go to state 173
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     declaracion_instr              shift and go to state 5
@@ -6039,7 +6271,7 @@ state 151
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 152
+state 157
 
     (51) parametro -> tipo ID .
 
@@ -6047,7 +6279,103 @@ state 152
     COMA            reduce using rule 51 (parametro -> tipo ID .)
 
 
-state 153
+state 158
+
+    (92) expresion -> PARA tipo PARC expresion .
+    (64) expresion -> expresion . MAS expresion
+    (65) expresion -> expresion . MENOS expresion
+    (66) expresion -> expresion . POR expresion
+    (67) expresion -> expresion . DIV expresion
+    (68) expresion -> expresion . POT expresion
+    (69) expresion -> expresion . MOD expresion
+    (70) expresion -> expresion . MENORQUE expresion
+    (71) expresion -> expresion . MAYORQUE expresion
+    (72) expresion -> expresion . IGUALIGUAL expresion
+    (73) expresion -> expresion . DIFERENTE expresion
+    (74) expresion -> expresion . MENORIGUAL expresion
+    (75) expresion -> expresion . MAYORIGUAL expresion
+    (76) expresion -> expresion . AND expresion
+    (77) expresion -> expresion . OR expresion
+    (78) expresion -> expresion . MASMAS
+    (79) expresion -> expresion . MENOSMENOS
+
+  ! shift/reduce conflict for MAS resolved as shift
+  ! shift/reduce conflict for MENOS resolved as shift
+  ! shift/reduce conflict for POR resolved as shift
+  ! shift/reduce conflict for DIV resolved as shift
+  ! shift/reduce conflict for POT resolved as shift
+  ! shift/reduce conflict for MOD resolved as shift
+  ! shift/reduce conflict for MENORQUE resolved as shift
+  ! shift/reduce conflict for MAYORQUE resolved as shift
+  ! shift/reduce conflict for IGUALIGUAL resolved as shift
+  ! shift/reduce conflict for DIFERENTE resolved as shift
+  ! shift/reduce conflict for MENORIGUAL resolved as shift
+  ! shift/reduce conflict for MAYORIGUAL resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for MASMAS resolved as shift
+  ! shift/reduce conflict for MENOSMENOS resolved as shift
+    PUNTOCOMA       reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    error           reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RPRINT          reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    ID              reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RIF             reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RSWITCH         reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RWHILE          reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RBREAK          reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RFOR            reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RMAIN           reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RFUNC           reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RRETURN         reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RINT            reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RDOUBLE         reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RSTRING         reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RBOOLEAN        reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RCHAR           reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RVAR            reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    $end            reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    LLAVEC          reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RDEFAULT        reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    RCASE           reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    PARC            reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    COMA            reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    DOSPUNTOS       reduce using rule 92 (expresion -> PARA tipo PARC expresion .)
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
+
+  ! MAS             [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! MENOS           [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! POR             [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! DIV             [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! POT             [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! MOD             [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! MENORQUE        [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! MAYORQUE        [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! IGUALIGUAL      [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! DIFERENTE       [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! MENORIGUAL      [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! MAYORIGUAL      [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! AND             [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! OR              [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! MASMAS          [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+  ! MENOSMENOS      [ reduce using rule 92 (expresion -> PARA tipo PARC expresion .) ]
+
+
+state 159
 
     (28) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones . LLAVEC
     (29) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones . LLAVEC RELSE LLAVEA instrucciones LLAVEC
@@ -6099,7 +6427,7 @@ state 153
     (62) tipo -> . RCHAR
     (63) tipo -> . RVAR
 
-    LLAVEC          shift and go to state 168
+    LLAVEC          shift and go to state 174
     error           shift and go to state 18
     RPRINT          shift and go to state 19
     ID              shift and go to state 21
@@ -6135,7 +6463,7 @@ state 153
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 154
+state 160
 
     (31) switch_instr -> RSWITCH PARA expresion PARC LLAVEA cases . LLAVEC
     (32) switch_instr -> RSWITCH PARA expresion PARC LLAVEA cases . default LLAVEC
@@ -6143,21 +6471,21 @@ state 154
     (37) default -> . RDEFAULT DOSPUNTOS instrucciones
     (36) case -> . RCASE expresion DOSPUNTOS instrucciones
 
-    LLAVEC          shift and go to state 169
-    RDEFAULT        shift and go to state 157
-    RCASE           shift and go to state 158
+    LLAVEC          shift and go to state 175
+    RDEFAULT        shift and go to state 163
+    RCASE           shift and go to state 164
 
-    default                        shift and go to state 170
-    case                           shift and go to state 171
+    default                        shift and go to state 176
+    case                           shift and go to state 177
 
-state 155
+state 161
 
     (33) switch_instr -> RSWITCH PARA expresion PARC LLAVEA default . LLAVEC
 
-    LLAVEC          shift and go to state 172
+    LLAVEC          shift and go to state 178
 
 
-state 156
+state 162
 
     (35) cases -> case .
 
@@ -6166,14 +6494,14 @@ state 156
     RCASE           reduce using rule 35 (cases -> case .)
 
 
-state 157
+state 163
 
     (37) default -> RDEFAULT . DOSPUNTOS instrucciones
 
-    DOSPUNTOS       shift and go to state 173
+    DOSPUNTOS       shift and go to state 179
 
 
-state 158
+state 164
 
     (36) case -> RCASE . expresion DOSPUNTOS instrucciones
     (64) expresion -> . expresion MAS expresion
@@ -6203,6 +6531,8 @@ state 158
     (88) expresion -> . BOOLEANO
     (89) expresion -> . CARACTER
     (90) expresion -> . RNULL
+    (91) expresion -> . RREAD PARA PARC
+    (92) expresion -> . PARA tipo PARC expresion
     (52) llamada_instr -> . ID PARA PARC
     (53) llamada_instr -> . ID PARA parametros_llamada PARC
 
@@ -6216,290 +6546,14 @@ state 158
     BOOLEANO        shift and go to state 68
     CARACTER        shift and go to state 69
     RNULL           shift and go to state 70
+    RREAD           shift and go to state 71
 
-    expresion                      shift and go to state 174
+    expresion                      shift and go to state 180
     llamada_instr                  shift and go to state 63
-
-state 159
-
-    (44) while_instr -> RWHILE PARA expresion PARC LLAVEA instrucciones . LLAVEC
-    (2) instrucciones -> instrucciones . instruccion
-    (4) instruccion -> . imprimir_instr finins
-    (5) instruccion -> . declaracion_instr finins
-    (6) instruccion -> . declaracion_instr2 finins
-    (7) instruccion -> . asignacion_instr finins
-    (8) instruccion -> . asignacion2_instr finins
-    (9) instruccion -> . if_instr
-    (10) instruccion -> . switch_instr
-    (11) instruccion -> . while_instr
-    (12) instruccion -> . break_instr finins
-    (13) instruccion -> . for_instr
-    (14) instruccion -> . main_instr
-    (15) instruccion -> . funcion_instr
-    (16) instruccion -> . llamada_instr finins
-    (17) instruccion -> . return_instr finins
-    (20) instruccion -> . error PUNTOCOMA
-    (21) instruccion -> . error
-    (22) imprimir_instr -> . RPRINT PARA expresion PARC
-    (23) declaracion_instr -> . tipo ID IGUAL expresion
-    (24) declaracion_instr2 -> . tipo ID
-    (25) asignacion_instr -> . ID IGUAL expresion
-    (26) asignacion2_instr -> . ID MASMAS
-    (27) asignacion2_instr -> . ID MENOSMENOS
-    (28) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC
-    (29) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC
-    (30) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr
-    (31) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA cases LLAVEC
-    (32) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA cases default LLAVEC
-    (33) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA default LLAVEC
-    (44) while_instr -> . RWHILE PARA expresion PARC LLAVEA instrucciones LLAVEC
-    (45) break_instr -> . RBREAK
-    (38) for_instr -> . RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-    (39) for_instr -> . RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-    (40) for_instr -> . RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-    (46) main_instr -> . RMAIN PARA PARC LLAVEA instrucciones LLAVEC
-    (47) funcion_instr -> . RFUNC ID PARA parametros PARC LLAVEA instrucciones LLAVEC
-    (48) funcion_instr -> . RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC
-    (52) llamada_instr -> . ID PARA PARC
-    (53) llamada_instr -> . ID PARA parametros_llamada PARC
-    (57) return_instr -> . RRETURN expresion
-    (58) tipo -> . RINT
-    (59) tipo -> . RDOUBLE
-    (60) tipo -> . RSTRING
-    (61) tipo -> . RBOOLEAN
-    (62) tipo -> . RCHAR
-    (63) tipo -> . RVAR
-
-    LLAVEC          shift and go to state 175
-    error           shift and go to state 18
-    RPRINT          shift and go to state 19
-    ID              shift and go to state 21
-    RIF             shift and go to state 22
-    RSWITCH         shift and go to state 23
-    RWHILE          shift and go to state 24
-    RBREAK          shift and go to state 25
-    RFOR            shift and go to state 26
-    RMAIN           shift and go to state 27
-    RFUNC           shift and go to state 28
-    RRETURN         shift and go to state 29
-    RINT            shift and go to state 30
-    RDOUBLE         shift and go to state 31
-    RSTRING         shift and go to state 32
-    RBOOLEAN        shift and go to state 33
-    RCHAR           shift and go to state 34
-    RVAR            shift and go to state 35
-
-    instruccion                    shift and go to state 36
-    imprimir_instr                 shift and go to state 4
-    declaracion_instr              shift and go to state 5
-    declaracion_instr2             shift and go to state 6
-    asignacion_instr               shift and go to state 7
-    asignacion2_instr              shift and go to state 8
-    if_instr                       shift and go to state 9
-    switch_instr                   shift and go to state 10
-    while_instr                    shift and go to state 11
-    break_instr                    shift and go to state 12
-    for_instr                      shift and go to state 13
-    main_instr                     shift and go to state 14
-    funcion_instr                  shift and go to state 15
-    llamada_instr                  shift and go to state 16
-    return_instr                   shift and go to state 17
-    tipo                           shift and go to state 20
-
-state 160
-
-    (38) for_instr -> RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA . asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-    (26) asignacion2_instr -> . ID MASMAS
-    (27) asignacion2_instr -> . ID MENOSMENOS
-
-    ID              shift and go to state 177
-
-    asignacion2_instr              shift and go to state 176
-
-state 161
-
-    (40) for_instr -> RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA . asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-    (26) asignacion2_instr -> . ID MASMAS
-    (27) asignacion2_instr -> . ID MENOSMENOS
-
-    ID              shift and go to state 177
-
-    asignacion2_instr              shift and go to state 178
-
-state 162
-
-    (39) for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA . asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-    (26) asignacion2_instr -> . ID MASMAS
-    (27) asignacion2_instr -> . ID MENOSMENOS
-
-    ID              shift and go to state 177
-
-    asignacion2_instr              shift and go to state 179
-
-state 163
-
-    (41) declaracion_for -> tipo_declaracion_for ID IGUAL expresion .
-    (64) expresion -> expresion . MAS expresion
-    (65) expresion -> expresion . MENOS expresion
-    (66) expresion -> expresion . POR expresion
-    (67) expresion -> expresion . DIV expresion
-    (68) expresion -> expresion . POT expresion
-    (69) expresion -> expresion . MOD expresion
-    (70) expresion -> expresion . MENORQUE expresion
-    (71) expresion -> expresion . MAYORQUE expresion
-    (72) expresion -> expresion . IGUALIGUAL expresion
-    (73) expresion -> expresion . DIFERENTE expresion
-    (74) expresion -> expresion . MENORIGUAL expresion
-    (75) expresion -> expresion . MAYORIGUAL expresion
-    (76) expresion -> expresion . AND expresion
-    (77) expresion -> expresion . OR expresion
-    (78) expresion -> expresion . MASMAS
-    (79) expresion -> expresion . MENOSMENOS
-
-    PUNTOCOMA       reduce using rule 41 (declaracion_for -> tipo_declaracion_for ID IGUAL expresion .)
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
-
-
-state 164
-
-    (46) main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .
-
-    error           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RPRINT          reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    ID              reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RIF             reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RSWITCH         reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RWHILE          reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RBREAK          reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RFOR            reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RMAIN           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RFUNC           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RRETURN         reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RINT            reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RDOUBLE         reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RSTRING         reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RBOOLEAN        reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RCHAR           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RVAR            reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    $end            reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    LLAVEC          reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RDEFAULT        reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-    RCASE           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
-
 
 state 165
 
-    (47) funcion_instr -> RFUNC ID PARA parametros PARC LLAVEA . instrucciones LLAVEC
-    (2) instrucciones -> . instrucciones instruccion
-    (3) instrucciones -> . instruccion
-    (4) instruccion -> . imprimir_instr finins
-    (5) instruccion -> . declaracion_instr finins
-    (6) instruccion -> . declaracion_instr2 finins
-    (7) instruccion -> . asignacion_instr finins
-    (8) instruccion -> . asignacion2_instr finins
-    (9) instruccion -> . if_instr
-    (10) instruccion -> . switch_instr
-    (11) instruccion -> . while_instr
-    (12) instruccion -> . break_instr finins
-    (13) instruccion -> . for_instr
-    (14) instruccion -> . main_instr
-    (15) instruccion -> . funcion_instr
-    (16) instruccion -> . llamada_instr finins
-    (17) instruccion -> . return_instr finins
-    (20) instruccion -> . error PUNTOCOMA
-    (21) instruccion -> . error
-    (22) imprimir_instr -> . RPRINT PARA expresion PARC
-    (23) declaracion_instr -> . tipo ID IGUAL expresion
-    (24) declaracion_instr2 -> . tipo ID
-    (25) asignacion_instr -> . ID IGUAL expresion
-    (26) asignacion2_instr -> . ID MASMAS
-    (27) asignacion2_instr -> . ID MENOSMENOS
-    (28) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC
-    (29) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC
-    (30) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr
-    (31) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA cases LLAVEC
-    (32) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA cases default LLAVEC
-    (33) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA default LLAVEC
-    (44) while_instr -> . RWHILE PARA expresion PARC LLAVEA instrucciones LLAVEC
-    (45) break_instr -> . RBREAK
-    (38) for_instr -> . RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-    (39) for_instr -> . RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-    (40) for_instr -> . RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
-    (46) main_instr -> . RMAIN PARA PARC LLAVEA instrucciones LLAVEC
-    (47) funcion_instr -> . RFUNC ID PARA parametros PARC LLAVEA instrucciones LLAVEC
-    (48) funcion_instr -> . RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC
-    (52) llamada_instr -> . ID PARA PARC
-    (53) llamada_instr -> . ID PARA parametros_llamada PARC
-    (57) return_instr -> . RRETURN expresion
-    (58) tipo -> . RINT
-    (59) tipo -> . RDOUBLE
-    (60) tipo -> . RSTRING
-    (61) tipo -> . RBOOLEAN
-    (62) tipo -> . RCHAR
-    (63) tipo -> . RVAR
-
-    error           shift and go to state 18
-    RPRINT          shift and go to state 19
-    ID              shift and go to state 21
-    RIF             shift and go to state 22
-    RSWITCH         shift and go to state 23
-    RWHILE          shift and go to state 24
-    RBREAK          shift and go to state 25
-    RFOR            shift and go to state 26
-    RMAIN           shift and go to state 27
-    RFUNC           shift and go to state 28
-    RRETURN         shift and go to state 29
-    RINT            shift and go to state 30
-    RDOUBLE         shift and go to state 31
-    RSTRING         shift and go to state 32
-    RBOOLEAN        shift and go to state 33
-    RCHAR           shift and go to state 34
-    RVAR            shift and go to state 35
-
-    instrucciones                  shift and go to state 180
-    instruccion                    shift and go to state 3
-    imprimir_instr                 shift and go to state 4
-    declaracion_instr              shift and go to state 5
-    declaracion_instr2             shift and go to state 6
-    asignacion_instr               shift and go to state 7
-    asignacion2_instr              shift and go to state 8
-    if_instr                       shift and go to state 9
-    switch_instr                   shift and go to state 10
-    while_instr                    shift and go to state 11
-    break_instr                    shift and go to state 12
-    for_instr                      shift and go to state 13
-    main_instr                     shift and go to state 14
-    funcion_instr                  shift and go to state 15
-    llamada_instr                  shift and go to state 16
-    return_instr                   shift and go to state 17
-    tipo                           shift and go to state 20
-
-state 166
-
-    (49) parametros -> parametros COMA parametro .
-
-    PARC            reduce using rule 49 (parametros -> parametros COMA parametro .)
-    COMA            reduce using rule 49 (parametros -> parametros COMA parametro .)
-
-
-state 167
-
-    (48) funcion_instr -> RFUNC ID PARA PARC LLAVEA instrucciones . LLAVEC
+    (44) while_instr -> RWHILE PARA expresion PARC LLAVEA instrucciones . LLAVEC
     (2) instrucciones -> instrucciones . instruccion
     (4) instruccion -> . imprimir_instr finins
     (5) instruccion -> . declaracion_instr finins
@@ -6583,7 +6637,284 @@ state 167
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
+state 166
+
+    (38) for_instr -> RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA . asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+    (26) asignacion2_instr -> . ID MASMAS
+    (27) asignacion2_instr -> . ID MENOSMENOS
+
+    ID              shift and go to state 183
+
+    asignacion2_instr              shift and go to state 182
+
+state 167
+
+    (40) for_instr -> RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA . asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+    (26) asignacion2_instr -> . ID MASMAS
+    (27) asignacion2_instr -> . ID MENOSMENOS
+
+    ID              shift and go to state 183
+
+    asignacion2_instr              shift and go to state 184
+
 state 168
+
+    (39) for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA . asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+    (26) asignacion2_instr -> . ID MASMAS
+    (27) asignacion2_instr -> . ID MENOSMENOS
+
+    ID              shift and go to state 183
+
+    asignacion2_instr              shift and go to state 185
+
+state 169
+
+    (41) declaracion_for -> tipo_declaracion_for ID IGUAL expresion .
+    (64) expresion -> expresion . MAS expresion
+    (65) expresion -> expresion . MENOS expresion
+    (66) expresion -> expresion . POR expresion
+    (67) expresion -> expresion . DIV expresion
+    (68) expresion -> expresion . POT expresion
+    (69) expresion -> expresion . MOD expresion
+    (70) expresion -> expresion . MENORQUE expresion
+    (71) expresion -> expresion . MAYORQUE expresion
+    (72) expresion -> expresion . IGUALIGUAL expresion
+    (73) expresion -> expresion . DIFERENTE expresion
+    (74) expresion -> expresion . MENORIGUAL expresion
+    (75) expresion -> expresion . MAYORIGUAL expresion
+    (76) expresion -> expresion . AND expresion
+    (77) expresion -> expresion . OR expresion
+    (78) expresion -> expresion . MASMAS
+    (79) expresion -> expresion . MENOSMENOS
+
+    PUNTOCOMA       reduce using rule 41 (declaracion_for -> tipo_declaracion_for ID IGUAL expresion .)
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
+
+
+state 170
+
+    (46) main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .
+
+    error           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RPRINT          reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    ID              reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RIF             reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RSWITCH         reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RWHILE          reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RBREAK          reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RFOR            reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RMAIN           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RFUNC           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RRETURN         reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RINT            reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RDOUBLE         reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RSTRING         reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RBOOLEAN        reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RCHAR           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RVAR            reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    $end            reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    LLAVEC          reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RDEFAULT        reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+    RCASE           reduce using rule 46 (main_instr -> RMAIN PARA PARC LLAVEA instrucciones LLAVEC .)
+
+
+state 171
+
+    (47) funcion_instr -> RFUNC ID PARA parametros PARC LLAVEA . instrucciones LLAVEC
+    (2) instrucciones -> . instrucciones instruccion
+    (3) instrucciones -> . instruccion
+    (4) instruccion -> . imprimir_instr finins
+    (5) instruccion -> . declaracion_instr finins
+    (6) instruccion -> . declaracion_instr2 finins
+    (7) instruccion -> . asignacion_instr finins
+    (8) instruccion -> . asignacion2_instr finins
+    (9) instruccion -> . if_instr
+    (10) instruccion -> . switch_instr
+    (11) instruccion -> . while_instr
+    (12) instruccion -> . break_instr finins
+    (13) instruccion -> . for_instr
+    (14) instruccion -> . main_instr
+    (15) instruccion -> . funcion_instr
+    (16) instruccion -> . llamada_instr finins
+    (17) instruccion -> . return_instr finins
+    (20) instruccion -> . error PUNTOCOMA
+    (21) instruccion -> . error
+    (22) imprimir_instr -> . RPRINT PARA expresion PARC
+    (23) declaracion_instr -> . tipo ID IGUAL expresion
+    (24) declaracion_instr2 -> . tipo ID
+    (25) asignacion_instr -> . ID IGUAL expresion
+    (26) asignacion2_instr -> . ID MASMAS
+    (27) asignacion2_instr -> . ID MENOSMENOS
+    (28) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC
+    (29) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC
+    (30) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr
+    (31) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA cases LLAVEC
+    (32) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA cases default LLAVEC
+    (33) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA default LLAVEC
+    (44) while_instr -> . RWHILE PARA expresion PARC LLAVEA instrucciones LLAVEC
+    (45) break_instr -> . RBREAK
+    (38) for_instr -> . RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+    (39) for_instr -> . RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+    (40) for_instr -> . RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+    (46) main_instr -> . RMAIN PARA PARC LLAVEA instrucciones LLAVEC
+    (47) funcion_instr -> . RFUNC ID PARA parametros PARC LLAVEA instrucciones LLAVEC
+    (48) funcion_instr -> . RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC
+    (52) llamada_instr -> . ID PARA PARC
+    (53) llamada_instr -> . ID PARA parametros_llamada PARC
+    (57) return_instr -> . RRETURN expresion
+    (58) tipo -> . RINT
+    (59) tipo -> . RDOUBLE
+    (60) tipo -> . RSTRING
+    (61) tipo -> . RBOOLEAN
+    (62) tipo -> . RCHAR
+    (63) tipo -> . RVAR
+
+    error           shift and go to state 18
+    RPRINT          shift and go to state 19
+    ID              shift and go to state 21
+    RIF             shift and go to state 22
+    RSWITCH         shift and go to state 23
+    RWHILE          shift and go to state 24
+    RBREAK          shift and go to state 25
+    RFOR            shift and go to state 26
+    RMAIN           shift and go to state 27
+    RFUNC           shift and go to state 28
+    RRETURN         shift and go to state 29
+    RINT            shift and go to state 30
+    RDOUBLE         shift and go to state 31
+    RSTRING         shift and go to state 32
+    RBOOLEAN        shift and go to state 33
+    RCHAR           shift and go to state 34
+    RVAR            shift and go to state 35
+
+    instrucciones                  shift and go to state 186
+    instruccion                    shift and go to state 3
+    imprimir_instr                 shift and go to state 4
+    declaracion_instr              shift and go to state 5
+    declaracion_instr2             shift and go to state 6
+    asignacion_instr               shift and go to state 7
+    asignacion2_instr              shift and go to state 8
+    if_instr                       shift and go to state 9
+    switch_instr                   shift and go to state 10
+    while_instr                    shift and go to state 11
+    break_instr                    shift and go to state 12
+    for_instr                      shift and go to state 13
+    main_instr                     shift and go to state 14
+    funcion_instr                  shift and go to state 15
+    llamada_instr                  shift and go to state 16
+    return_instr                   shift and go to state 17
+    tipo                           shift and go to state 20
+
+state 172
+
+    (49) parametros -> parametros COMA parametro .
+
+    PARC            reduce using rule 49 (parametros -> parametros COMA parametro .)
+    COMA            reduce using rule 49 (parametros -> parametros COMA parametro .)
+
+
+state 173
+
+    (48) funcion_instr -> RFUNC ID PARA PARC LLAVEA instrucciones . LLAVEC
+    (2) instrucciones -> instrucciones . instruccion
+    (4) instruccion -> . imprimir_instr finins
+    (5) instruccion -> . declaracion_instr finins
+    (6) instruccion -> . declaracion_instr2 finins
+    (7) instruccion -> . asignacion_instr finins
+    (8) instruccion -> . asignacion2_instr finins
+    (9) instruccion -> . if_instr
+    (10) instruccion -> . switch_instr
+    (11) instruccion -> . while_instr
+    (12) instruccion -> . break_instr finins
+    (13) instruccion -> . for_instr
+    (14) instruccion -> . main_instr
+    (15) instruccion -> . funcion_instr
+    (16) instruccion -> . llamada_instr finins
+    (17) instruccion -> . return_instr finins
+    (20) instruccion -> . error PUNTOCOMA
+    (21) instruccion -> . error
+    (22) imprimir_instr -> . RPRINT PARA expresion PARC
+    (23) declaracion_instr -> . tipo ID IGUAL expresion
+    (24) declaracion_instr2 -> . tipo ID
+    (25) asignacion_instr -> . ID IGUAL expresion
+    (26) asignacion2_instr -> . ID MASMAS
+    (27) asignacion2_instr -> . ID MENOSMENOS
+    (28) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC
+    (29) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC
+    (30) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr
+    (31) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA cases LLAVEC
+    (32) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA cases default LLAVEC
+    (33) switch_instr -> . RSWITCH PARA expresion PARC LLAVEA default LLAVEC
+    (44) while_instr -> . RWHILE PARA expresion PARC LLAVEA instrucciones LLAVEC
+    (45) break_instr -> . RBREAK
+    (38) for_instr -> . RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+    (39) for_instr -> . RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+    (40) for_instr -> . RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC
+    (46) main_instr -> . RMAIN PARA PARC LLAVEA instrucciones LLAVEC
+    (47) funcion_instr -> . RFUNC ID PARA parametros PARC LLAVEA instrucciones LLAVEC
+    (48) funcion_instr -> . RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC
+    (52) llamada_instr -> . ID PARA PARC
+    (53) llamada_instr -> . ID PARA parametros_llamada PARC
+    (57) return_instr -> . RRETURN expresion
+    (58) tipo -> . RINT
+    (59) tipo -> . RDOUBLE
+    (60) tipo -> . RSTRING
+    (61) tipo -> . RBOOLEAN
+    (62) tipo -> . RCHAR
+    (63) tipo -> . RVAR
+
+    LLAVEC          shift and go to state 187
+    error           shift and go to state 18
+    RPRINT          shift and go to state 19
+    ID              shift and go to state 21
+    RIF             shift and go to state 22
+    RSWITCH         shift and go to state 23
+    RWHILE          shift and go to state 24
+    RBREAK          shift and go to state 25
+    RFOR            shift and go to state 26
+    RMAIN           shift and go to state 27
+    RFUNC           shift and go to state 28
+    RRETURN         shift and go to state 29
+    RINT            shift and go to state 30
+    RDOUBLE         shift and go to state 31
+    RSTRING         shift and go to state 32
+    RBOOLEAN        shift and go to state 33
+    RCHAR           shift and go to state 34
+    RVAR            shift and go to state 35
+
+    instruccion                    shift and go to state 36
+    imprimir_instr                 shift and go to state 4
+    declaracion_instr              shift and go to state 5
+    declaracion_instr2             shift and go to state 6
+    asignacion_instr               shift and go to state 7
+    asignacion2_instr              shift and go to state 8
+    if_instr                       shift and go to state 9
+    switch_instr                   shift and go to state 10
+    while_instr                    shift and go to state 11
+    break_instr                    shift and go to state 12
+    for_instr                      shift and go to state 13
+    main_instr                     shift and go to state 14
+    funcion_instr                  shift and go to state 15
+    llamada_instr                  shift and go to state 16
+    return_instr                   shift and go to state 17
+    tipo                           shift and go to state 20
+
+state 174
 
     (28) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC .
     (29) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC . RELSE LLAVEA instrucciones LLAVEC
@@ -6610,10 +6941,10 @@ state 168
     LLAVEC          reduce using rule 28 (if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC .)
     RDEFAULT        reduce using rule 28 (if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC .)
     RCASE           reduce using rule 28 (if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC .)
-    RELSE           shift and go to state 182
+    RELSE           shift and go to state 188
 
 
-state 169
+state 175
 
     (31) switch_instr -> RSWITCH PARA expresion PARC LLAVEA cases LLAVEC .
 
@@ -6640,14 +6971,14 @@ state 169
     RCASE           reduce using rule 31 (switch_instr -> RSWITCH PARA expresion PARC LLAVEA cases LLAVEC .)
 
 
-state 170
+state 176
 
     (32) switch_instr -> RSWITCH PARA expresion PARC LLAVEA cases default . LLAVEC
 
-    LLAVEC          shift and go to state 183
+    LLAVEC          shift and go to state 189
 
 
-state 171
+state 177
 
     (34) cases -> cases case .
 
@@ -6656,7 +6987,7 @@ state 171
     RCASE           reduce using rule 34 (cases -> cases case .)
 
 
-state 172
+state 178
 
     (33) switch_instr -> RSWITCH PARA expresion PARC LLAVEA default LLAVEC .
 
@@ -6683,7 +7014,7 @@ state 172
     RCASE           reduce using rule 33 (switch_instr -> RSWITCH PARA expresion PARC LLAVEA default LLAVEC .)
 
 
-state 173
+state 179
 
     (37) default -> RDEFAULT DOSPUNTOS . instrucciones
     (2) instrucciones -> . instrucciones instruccion
@@ -6752,7 +7083,7 @@ state 173
     RCHAR           shift and go to state 34
     RVAR            shift and go to state 35
 
-    instrucciones                  shift and go to state 184
+    instrucciones                  shift and go to state 190
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     declaracion_instr              shift and go to state 5
@@ -6770,7 +7101,7 @@ state 173
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 174
+state 180
 
     (36) case -> RCASE expresion . DOSPUNTOS instrucciones
     (64) expresion -> expresion . MAS expresion
@@ -6790,26 +7121,26 @@ state 174
     (78) expresion -> expresion . MASMAS
     (79) expresion -> expresion . MENOSMENOS
 
-    DOSPUNTOS       shift and go to state 185
-    MAS             shift and go to state 90
-    MENOS           shift and go to state 91
-    POR             shift and go to state 92
-    DIV             shift and go to state 93
-    POT             shift and go to state 94
-    MOD             shift and go to state 95
-    MENORQUE        shift and go to state 96
-    MAYORQUE        shift and go to state 97
-    IGUALIGUAL      shift and go to state 98
-    DIFERENTE       shift and go to state 99
-    MENORIGUAL      shift and go to state 100
-    MAYORIGUAL      shift and go to state 101
-    AND             shift and go to state 102
-    OR              shift and go to state 103
-    MASMAS          shift and go to state 104
-    MENOSMENOS      shift and go to state 105
+    DOSPUNTOS       shift and go to state 191
+    MAS             shift and go to state 91
+    MENOS           shift and go to state 92
+    POR             shift and go to state 93
+    DIV             shift and go to state 94
+    POT             shift and go to state 95
+    MOD             shift and go to state 96
+    MENORQUE        shift and go to state 97
+    MAYORQUE        shift and go to state 98
+    IGUALIGUAL      shift and go to state 99
+    DIFERENTE       shift and go to state 100
+    MENORIGUAL      shift and go to state 101
+    MAYORIGUAL      shift and go to state 102
+    AND             shift and go to state 103
+    OR              shift and go to state 104
+    MASMAS          shift and go to state 105
+    MENOSMENOS      shift and go to state 106
 
 
-state 175
+state 181
 
     (44) while_instr -> RWHILE PARA expresion PARC LLAVEA instrucciones LLAVEC .
 
@@ -6836,14 +7167,14 @@ state 175
     RCASE           reduce using rule 44 (while_instr -> RWHILE PARA expresion PARC LLAVEA instrucciones LLAVEC .)
 
 
-state 176
+state 182
 
     (38) for_instr -> RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr . PARC LLAVEA instrucciones LLAVEC
 
-    PARC            shift and go to state 186
+    PARC            shift and go to state 192
 
 
-state 177
+state 183
 
     (26) asignacion2_instr -> ID . MASMAS
     (27) asignacion2_instr -> ID . MENOSMENOS
@@ -6852,21 +7183,21 @@ state 177
     MENOSMENOS      shift and go to state 51
 
 
-state 178
+state 184
 
     (40) for_instr -> RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr . PARC LLAVEA instrucciones LLAVEC
 
-    PARC            shift and go to state 187
+    PARC            shift and go to state 193
 
 
-state 179
+state 185
 
     (39) for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr . PARC LLAVEA instrucciones LLAVEC
 
-    PARC            shift and go to state 188
+    PARC            shift and go to state 194
 
 
-state 180
+state 186
 
     (47) funcion_instr -> RFUNC ID PARA parametros PARC LLAVEA instrucciones . LLAVEC
     (2) instrucciones -> instrucciones . instruccion
@@ -6916,7 +7247,7 @@ state 180
     (62) tipo -> . RCHAR
     (63) tipo -> . RVAR
 
-    LLAVEC          shift and go to state 189
+    LLAVEC          shift and go to state 195
     error           shift and go to state 18
     RPRINT          shift and go to state 19
     ID              shift and go to state 21
@@ -6952,7 +7283,7 @@ state 180
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 181
+state 187
 
     (48) funcion_instr -> RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC .
 
@@ -6979,7 +7310,7 @@ state 181
     RCASE           reduce using rule 48 (funcion_instr -> RFUNC ID PARA PARC LLAVEA instrucciones LLAVEC .)
 
 
-state 182
+state 188
 
     (29) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE . LLAVEA instrucciones LLAVEC
     (30) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE . if_instr
@@ -6987,12 +7318,12 @@ state 182
     (29) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC
     (30) if_instr -> . RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr
 
-    LLAVEA          shift and go to state 190
+    LLAVEA          shift and go to state 196
     RIF             shift and go to state 22
 
-    if_instr                       shift and go to state 191
+    if_instr                       shift and go to state 197
 
-state 183
+state 189
 
     (32) switch_instr -> RSWITCH PARA expresion PARC LLAVEA cases default LLAVEC .
 
@@ -7019,7 +7350,7 @@ state 183
     RCASE           reduce using rule 32 (switch_instr -> RSWITCH PARA expresion PARC LLAVEA cases default LLAVEC .)
 
 
-state 184
+state 190
 
     (37) default -> RDEFAULT DOSPUNTOS instrucciones .
     (2) instrucciones -> instrucciones . instruccion
@@ -7105,7 +7436,7 @@ state 184
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 185
+state 191
 
     (36) case -> RCASE expresion DOSPUNTOS . instrucciones
     (2) instrucciones -> . instrucciones instruccion
@@ -7174,7 +7505,7 @@ state 185
     RCHAR           shift and go to state 34
     RVAR            shift and go to state 35
 
-    instrucciones                  shift and go to state 192
+    instrucciones                  shift and go to state 198
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     declaracion_instr              shift and go to state 5
@@ -7192,28 +7523,28 @@ state 185
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 186
+state 192
 
     (38) for_instr -> RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC . LLAVEA instrucciones LLAVEC
 
-    LLAVEA          shift and go to state 193
+    LLAVEA          shift and go to state 199
 
 
-state 187
+state 193
 
     (40) for_instr -> RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC . LLAVEA instrucciones LLAVEC
 
-    LLAVEA          shift and go to state 194
+    LLAVEA          shift and go to state 200
 
 
-state 188
+state 194
 
     (39) for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC . LLAVEA instrucciones LLAVEC
 
-    LLAVEA          shift and go to state 195
+    LLAVEA          shift and go to state 201
 
 
-state 189
+state 195
 
     (47) funcion_instr -> RFUNC ID PARA parametros PARC LLAVEA instrucciones LLAVEC .
 
@@ -7240,7 +7571,7 @@ state 189
     RCASE           reduce using rule 47 (funcion_instr -> RFUNC ID PARA parametros PARC LLAVEA instrucciones LLAVEC .)
 
 
-state 190
+state 196
 
     (29) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA . instrucciones LLAVEC
     (2) instrucciones -> . instrucciones instruccion
@@ -7309,7 +7640,7 @@ state 190
     RCHAR           shift and go to state 34
     RVAR            shift and go to state 35
 
-    instrucciones                  shift and go to state 196
+    instrucciones                  shift and go to state 202
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     declaracion_instr              shift and go to state 5
@@ -7327,7 +7658,7 @@ state 190
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 191
+state 197
 
     (30) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr .
 
@@ -7354,7 +7685,7 @@ state 191
     RCASE           reduce using rule 30 (if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE if_instr .)
 
 
-state 192
+state 198
 
     (36) case -> RCASE expresion DOSPUNTOS instrucciones .
     (2) instrucciones -> instrucciones . instruccion
@@ -7442,7 +7773,7 @@ state 192
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 193
+state 199
 
     (38) for_instr -> RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA . instrucciones LLAVEC
     (2) instrucciones -> . instrucciones instruccion
@@ -7513,7 +7844,7 @@ state 193
 
     asignacion_instr               shift and go to state 7
     asignacion2_instr              shift and go to state 8
-    instrucciones                  shift and go to state 197
+    instrucciones                  shift and go to state 203
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     declaracion_instr              shift and go to state 5
@@ -7529,7 +7860,7 @@ state 193
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 194
+state 200
 
     (40) for_instr -> RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA . instrucciones LLAVEC
     (2) instrucciones -> . instrucciones instruccion
@@ -7599,7 +7930,7 @@ state 194
     RVAR            shift and go to state 35
 
     asignacion2_instr              shift and go to state 8
-    instrucciones                  shift and go to state 198
+    instrucciones                  shift and go to state 204
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     declaracion_instr              shift and go to state 5
@@ -7616,7 +7947,7 @@ state 194
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 195
+state 201
 
     (39) for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA . instrucciones LLAVEC
     (2) instrucciones -> . instrucciones instruccion
@@ -7686,7 +8017,7 @@ state 195
     RVAR            shift and go to state 35
 
     asignacion2_instr              shift and go to state 8
-    instrucciones                  shift and go to state 199
+    instrucciones                  shift and go to state 205
     instruccion                    shift and go to state 3
     imprimir_instr                 shift and go to state 4
     declaracion_instr              shift and go to state 5
@@ -7703,7 +8034,7 @@ state 195
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 196
+state 202
 
     (29) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones . LLAVEC
     (2) instrucciones -> instrucciones . instruccion
@@ -7753,7 +8084,7 @@ state 196
     (62) tipo -> . RCHAR
     (63) tipo -> . RVAR
 
-    LLAVEC          shift and go to state 200
+    LLAVEC          shift and go to state 206
     error           shift and go to state 18
     RPRINT          shift and go to state 19
     ID              shift and go to state 21
@@ -7789,7 +8120,7 @@ state 196
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 197
+state 203
 
     (38) for_instr -> RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones . LLAVEC
     (2) instrucciones -> instrucciones . instruccion
@@ -7839,7 +8170,7 @@ state 197
     (62) tipo -> . RCHAR
     (63) tipo -> . RVAR
 
-    LLAVEC          shift and go to state 201
+    LLAVEC          shift and go to state 207
     error           shift and go to state 18
     RPRINT          shift and go to state 19
     ID              shift and go to state 21
@@ -7875,7 +8206,7 @@ state 197
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 198
+state 204
 
     (40) for_instr -> RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones . LLAVEC
     (2) instrucciones -> instrucciones . instruccion
@@ -7925,7 +8256,7 @@ state 198
     (62) tipo -> . RCHAR
     (63) tipo -> . RVAR
 
-    LLAVEC          shift and go to state 202
+    LLAVEC          shift and go to state 208
     error           shift and go to state 18
     RPRINT          shift and go to state 19
     ID              shift and go to state 21
@@ -7961,7 +8292,7 @@ state 198
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 199
+state 205
 
     (39) for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones . LLAVEC
     (2) instrucciones -> instrucciones . instruccion
@@ -8011,7 +8342,7 @@ state 199
     (62) tipo -> . RCHAR
     (63) tipo -> . RVAR
 
-    LLAVEC          shift and go to state 203
+    LLAVEC          shift and go to state 209
     error           shift and go to state 18
     RPRINT          shift and go to state 19
     ID              shift and go to state 21
@@ -8047,7 +8378,7 @@ state 199
     return_instr                   shift and go to state 17
     tipo                           shift and go to state 20
 
-state 200
+state 206
 
     (29) if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC .
 
@@ -8074,7 +8405,7 @@ state 200
     RCASE           reduce using rule 29 (if_instr -> RIF PARA expresion PARC LLAVEA instrucciones LLAVEC RELSE LLAVEA instrucciones LLAVEC .)
 
 
-state 201
+state 207
 
     (38) for_instr -> RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC .
 
@@ -8101,7 +8432,7 @@ state 201
     RCASE           reduce using rule 38 (for_instr -> RFOR PARA asignacion_instr PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC .)
 
 
-state 202
+state 208
 
     (40) for_instr -> RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC .
 
@@ -8128,7 +8459,7 @@ state 202
     RCASE           reduce using rule 40 (for_instr -> RFOR PARA expresion PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC .)
 
 
-state 203
+state 209
 
     (39) for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC .
 
@@ -8154,3 +8485,22 @@ state 203
     RDEFAULT        reduce using rule 39 (for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC .)
     RCASE           reduce using rule 39 (for_instr -> RFOR PARA declaracion_for PUNTOCOMA expresion PUNTOCOMA asignacion2_instr PARC LLAVEA instrucciones LLAVEC .)
 
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for MAS in state 158 resolved as shift
+WARNING: shift/reduce conflict for MENOS in state 158 resolved as shift
+WARNING: shift/reduce conflict for POR in state 158 resolved as shift
+WARNING: shift/reduce conflict for DIV in state 158 resolved as shift
+WARNING: shift/reduce conflict for POT in state 158 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 158 resolved as shift
+WARNING: shift/reduce conflict for MENORQUE in state 158 resolved as shift
+WARNING: shift/reduce conflict for MAYORQUE in state 158 resolved as shift
+WARNING: shift/reduce conflict for IGUALIGUAL in state 158 resolved as shift
+WARNING: shift/reduce conflict for DIFERENTE in state 158 resolved as shift
+WARNING: shift/reduce conflict for MENORIGUAL in state 158 resolved as shift
+WARNING: shift/reduce conflict for MAYORIGUAL in state 158 resolved as shift
+WARNING: shift/reduce conflict for AND in state 158 resolved as shift
+WARNING: shift/reduce conflict for OR in state 158 resolved as shift
+WARNING: shift/reduce conflict for MASMAS in state 158 resolved as shift
+WARNING: shift/reduce conflict for MENOSMENOS in state 158 resolved as shift

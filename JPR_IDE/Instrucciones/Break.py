@@ -1,3 +1,4 @@
+from Abstract.NodoAST import NodoAST
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.Tipo import TIPO
@@ -9,4 +10,8 @@ class Break(Instruccion):
         self.columna = columna
 
     def interpretar(self, tree, table):
-        return self 
+        return self
+    
+    def getNodo(self):
+        nodo = NodoAST("BREAK")
+        return nodo  
