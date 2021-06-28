@@ -17,7 +17,7 @@ class Declaracion(Instruccion):
         if(self.expresion!=None):
             value = self.expresion.interpretar(tree, table) # Valor a asignar a la variable
             if isinstance(value, Excepcion): return value
-            if (self.tipo != self.expresion.tipo and self.tipo!=TIPO.VAR and self.expresion.tipo!=TIPO.NULO and (self.tipo!=TIPO.DECIMAL and self.expresion.tipo!=TIPO.ENTERO))  :
+            if (self.tipo != self.expresion.tipo and self.tipo!=TIPO.VAR and self.expresion.tipo!=TIPO.NULO and (self.tipo!=TIPO.DECIMAL  or  self.expresion.tipo!=TIPO.ENTERO)):
                 return Excepcion("Semantico", "Tipo de dato diferente en Declaracion", self.fila, self.columna)
             if(self.tipo==TIPO.VAR):
                 simbolo = Simbolo(str(self.identificador), self.expresion.tipo, self.fila, self.columna, value)

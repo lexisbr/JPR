@@ -1,58 +1,60 @@
 from Abstract.NodoAST import NodoAST
 from Abstract.Instruccion import Instruccion
 from Instrucciones.Break import Break
+from Instrucciones.Declaracion import Declaracion
 from TS.Excepcion         import Excepcion
 from TS.Tipo              import TIPO
 from TS.TablaSimbolos     import TablaSimbolos
 
 class For(Instruccion):
-    def __init__(self, value_init, condicion, incremento_decremento, instrucciones,linea,columna):
-        self.condicion         = condicion
-        self.value_init        = value_init
-        self.incr_decr         = incremento_decremento
-        self.instrucciones     = instrucciones
-        self.linea             = linea
-        self.columna           = columna
-
-        
+    def __init__(self, valor_inicial, condicion, incremento_decremento, instrucciones,linea,columna):
+        self.condicion = condicion
+        self.valor_inicial = valor_inicial
+        self.incremento_decremento = incremento_decremento
+        self.instrucciones = instrucciones
+        self.linea = linea
+        self.columna = columna
 
     def interpretar(self, tree, table):
-        value_init = self.value_init.interpretar(tree,table)
-        if isinstance(value_init, Excepcion): return value_init
+        isDeclaracion = False
+        nuevaTable = None
+        if isinstance(self.valor_inicial,Declaracion):
+            nuevaTable = TablaSimbolos(table)
+            valor_inicial = self.valor_inicial.interpretar(tree,nuevaTable)
+            isDeclaracion = True
+        else:
+            valor_inicial = self.valor_inicial.interpretar(tree,table)
 
         while True:
-            condicion = self.condicion.interpretar(tree, table)
+            if isDeclaracion:
+                condicion = self.condicion.interpretar(tree, nuevaTable)
+            else:
+                condicion = self.condicion.interpretar(tree, table)
+                
+
             if isinstance(condicion, Excepcion): return condicion
 
             if self.condicion.tipo == TIPO.BOOLEANO:
                 if bool(condicion) == True:  # VERIFICA SI ES VERDADERA LA CONDICION
-                    nuevaTabla = TablaSimbolos(table)  # NUEVO ENTORNO
+                    if isDeclaracion:
+                        nuevaTabla = TablaSimbolos(nuevaTable)  # NUEVO ENTORNO
+                    else:
+                        nuevaTabla = TablaSimbolos(table)  # NUEVO ENTORNO
+                        
+
                     for instruccion in self.instrucciones:
                         result = instruccion.interpretar(tree, nuevaTabla)  # EJECUTA INSTRUCCION ADENTRO DEL FOR
                         if isinstance(result, Excepcion):
                             tree.getExcepciones().append(result)
                             tree.updateConsola(result.toString())
                         if isinstance(result, Break): return None
+                    
+                    self.incremento_decremento.interpretar(tree,nuevaTabla)
                 else:
                     break
             else:
-                return Excepcion("Semantico", "Tipo de dato no booleano en For ", self.fila, self.columna)
-            self.incr_decr.interpretar(tree,table)
-
-
-    def instruccionesInterpreter(self, instruccion, tree, table):
-
-    # REALIZAR LAS ACCIONES
-        if isinstance(instruccion, list):           #agregado
-            for element in instruccion:
-                self.instruccionesInterpreter(element, tree,table)
-        else:              
-            value = instruccion.interpretar(tree,table)
-            if isinstance(value, Excepcion) :
-                tree.getExcepciones().append(value)
-                tree.updateConsola(value.toString())
-                
-
+                return Excepcion("Semantico", "Tipo de Dato no booleano en la Condicional del Ciclo (For).", self.fila, self.columna)
+            
     def getNodo(self):
         nodo = NodoAST("FOR")
 

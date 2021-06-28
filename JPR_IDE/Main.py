@@ -264,6 +264,10 @@ def exportar_errores():
     else:
         os.startfile('imagen.jpg')
     
+#Exportar Arbol Sintactico
+def exportar_arbol():
+    os.system('xdg-open ast.pdf')
+    
 # Declaracion del tk
 root = Tk()
 root.title("JPR Editor")
@@ -302,6 +306,11 @@ nuevoItem.add_command(label='Abrir',command=abrir)
 nuevoItem.add_command(label='Guardar',command=guardarArchivo)
 nuevoItem.add_command(label='Guardar como',command=guardarComo)
 menu.add_cascade(label='Archivo', menu=nuevoItem)
+reportesItem = Menu(menu,tearoff=0)
+reportesItem.add_command(label='Arbol Sintactico',command=exportar_arbol)
+reportesItem.add_command(label='Tabla de Errores',command=exportar_errores)
+reportesItem.add_command(label='Tabla de Simbolos',command=guardarArchivo)
+menu.add_cascade(label='Reportes', menu=reportesItem)
 root.config(menu=menu)
 #Titulo
 tituloLbl = Label(frameEditors,text="JPR Editor",font="Helvetica 18",fg="blue4")
@@ -315,9 +324,7 @@ erroresLbl.grid(row=5,column=1)
 #Boton de compilacion
 compilarButton= Button(frameEditors,text="Compilar",width=10,command=compilar_archivo)
 compilarButton.grid(row=1,column=0,sticky="s")
-#Boton para exportar errores
-exportarButton= Button(frameEditors,text="Exportar errores",width=10,command=exportar_errores)
-exportarButton.grid(row=7,column=1,sticky="s")
+
 
 #Tabla De Simbolos
 tv=ttk.Treeview(frameEditors,height=7)
