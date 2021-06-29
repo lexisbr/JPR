@@ -3,6 +3,7 @@ from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.TablaSimbolos import TablaSimbolos
 from Instrucciones.Break import Break
+from Instrucciones.Continue import Continue
 
 
 class Main(Instruccion):
@@ -22,6 +23,11 @@ class Main(Instruccion):
                 listaerrores.append(value)
             if isinstance(value, Break): 
                 err = Excepcion("Semantico", "Sentencia BREAK fuera de ciclo", instruccion.fila, instruccion.columna)
+                tree.getExcepciones().append(err)
+                tree.updateConsola(err.toString())
+                listaerrores.append(err)
+            if isinstance(value, Continue): 
+                err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
                 tree.getExcepciones().append(err)
                 tree.updateConsola(err.toString())
                 listaerrores.append(err)

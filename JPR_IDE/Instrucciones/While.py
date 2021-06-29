@@ -5,6 +5,7 @@ from TS.Excepcion import Excepcion
 from TS.Tipo import TIPO
 from TS.TablaSimbolos import TablaSimbolos
 from Instrucciones.Break import Break
+from Instrucciones.Continue import Continue
 
 class While(Instruccion):
     def __init__(self, condicion, instrucciones, fila, columna):
@@ -27,6 +28,7 @@ class While(Instruccion):
                             tree.getExcepciones().append(result)
                             tree.updateConsola(result.toString())
                         if isinstance(result, Break): return None
+                        if isinstance(result, Continue): break 
                         if isinstance(result, Return): return result
                 else:
                     break

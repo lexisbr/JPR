@@ -1,6 +1,8 @@
 from Abstract.NodoAST import NodoAST
 from Abstract.Instruccion import Instruccion
 from Instrucciones.Break import Break
+from Instrucciones.Continue import Continue
+from Instrucciones.Return import Return
 from Instrucciones.Declaracion import Declaracion
 from TS.Excepcion         import Excepcion
 from TS.Tipo              import TIPO
@@ -47,7 +49,12 @@ class For(Instruccion):
                         if isinstance(result, Excepcion):
                             tree.getExcepciones().append(result)
                             tree.updateConsola(result.toString())
-                        if isinstance(result, Break): return None
+                        if isinstance(result, Break): 
+                            return None
+                        if isinstance(result, Continue):
+                            break 
+                        if isinstance(result, Return): 
+                            return result
                     
                     self.incremento_decremento.interpretar(tree,nuevaTabla)
                 else:

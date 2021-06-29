@@ -23,10 +23,6 @@ reservadas = {
     'return': 'RRETURN',
     'func': 'RFUNC',
     'read': 'RREAD',
-    'toLower': 'RTOLOWER',
-    'toUpper': 'RTOUPPER',
-    'length': 'RLENGTH',
-    'truncate': 'RTRUNCATE',
     'round': 'RROUND',
     'typeof': 'RTYPEOF',
     'main': 'RMAIN',
@@ -223,6 +219,7 @@ from Instrucciones.Asignacion import Asignacion
 from Instrucciones.If import If
 from Instrucciones.While import While
 from Instrucciones.Break import Break
+from Instrucciones.Continue import Continue
 from Instrucciones.Main import Main
 from Instrucciones.Funcion import Funcion
 from Instrucciones.Llamada import Llamada
@@ -234,7 +231,8 @@ from Nativas.ToLower import ToLower
 from Nativas.ToUpper import ToUpper
 from Expresiones.Read import Read
 from Expresiones.Casteo import Casteo
-
+from Nativas.Length import Length as LengthObj
+from Nativas.Truncate import Truncate as TruncateObj
 def p_init(t) :
     'init            : instrucciones'
     t[0] = t[1]
@@ -266,6 +264,7 @@ def p_instruccion(t) :
                         | switch_instr
                         | while_instr 
                         | break_instr finins
+                        | continue_instr finins
                         | for_instr 
                         | main_instr 
                         | funcion_instr 
@@ -419,6 +418,14 @@ def p_while(t) :
 def p_break(t) :
     'break_instr     : RBREAK'
     t[0] = Break(t.lineno(1), find_column(input, t.slice[1]))
+
+#///////////////////////////////////////CONTINUE//////////////////////////////////////////////////
+
+def p_continue(t) :
+    'continue_instr     : RCONTINUE'
+    print(">>> continue")
+    t[0] = Continue(t.lineno(1), find_column(input, t.slice[1]))
+
 
 #///////////////////////////////////////MAIN//////////////////////////////////////////////////
 
@@ -647,13 +654,24 @@ def crearNativas(ast):          # CREACION Y DECLARACION DE LAS FUNCIONES NATIVA
     toUpper = ToUpper(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(toUpper)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
 
-
     nombre = "tolower"
     parametros = [{'tipo':TIPO.CADENA,'identificador':'toLower##Param1'}]
     instrucciones = []
     toLower = ToLower(nombre, parametros, instrucciones, -1, -1)
     ast.addFuncion(toLower)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
 
+    nombre = "length"
+    parametros = [{'tipo':TIPO.CADENA,'identificador':'Length##Param1'}]
+    instrucciones = []
+    Length = LengthObj(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(Length)
+    
+    nombre = "truncate"
+    parametros = [{'tipo':TIPO.DECIMAL,'identificador':'Truncate##Param1'}]
+    instrucciones = []
+    Truncate = TruncateObj(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(Truncate) 
+    
 
 
 #INTERFAZ
@@ -690,6 +708,11 @@ def interfaz(archivo):
                             ast.getExcepciones().append(err)
                             errores.append(err)
                             ast.updateConsola(err.toString())
+                    elif isinstance(value, Continue): 
+                            err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
+                            ast.getExcepciones().append(err)
+                            errores.append(err)
+                            ast.updateConsola(err.toString())
                     else:
                         for error in value:
                             errores.append(error)
@@ -715,6 +738,11 @@ def interfaz(archivo):
                         ast.getExcepciones().append(err)
                         errores.append(err)
                         ast.updateConsola(err.toString())
+                    elif isinstance(value, Continue): 
+                            err = Excepcion("Semantico", "Sentencia CONTINUE fuera de ciclo", instruccion.fila, instruccion.columna)
+                            ast.getExcepciones().append(err)
+                            errores.append(err)
+                            ast.updateConsola(err.toString())
                     elif isinstance(value, Return): 
                         err = Excepcion("Semantico", "Sentencia RETURN fuera de ciclo", instruccion.fila, instruccion.columna)
                         ast.getExcepciones().append(err)
