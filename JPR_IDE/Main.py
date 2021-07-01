@@ -10,6 +10,8 @@ from tkinter import scrolledtext
 from tkinter import ttk
 from grammar import interfaz as compilar
 from grammar import getErrores as lista_errores
+from grammar import getSimbolos as lista_simbolos
+from grammar import getFunciones as lista_funciones
 
 # Metodos
 
@@ -229,13 +231,28 @@ def compilar_archivo():
     contenido = compilar(entradaTxt.get(1.0, END))
     consoleTxt.insert(INSERT,contenido)
     excepciones = lista_errores()
+    simbolos = lista_simbolos()
+    funciones = lista_funciones()
+    
     cont = 1
     tabla_errores.delete(*tabla_errores.get_children())
     for excepcion in excepciones:
         tabla_errores.insert(parent='',index=cont,iid=cont,text='',values=(cont,excepcion.getTipo(),excepcion.getDescripcion(),excepcion.getFila(),excepcion.getColumna()))
         cont += 1
-    pintar_texto()
+    
+    cont = 1
+    tv.delete(*tv.get_children())
+    for simbolo in simbolos:
+        tv.insert(parent='',index=cont,iid=cont,text='',values=(cont,simbolo.getID(),"Variable",simbolo.getTipo(),simbolo.getEntorno(),simbolo.getValor(),simbolo.getFila(),simbolo.getColumna()))
+        cont += 1
         
+    for funcion in funciones:
+        if not(funcion.getNombre()=="round" or funcion.getNombre()=="toupper" or funcion.getNombre()=="tolower" or funcion.getNombre()=="length" or funcion.getNombre()=="truncate" or funcion.getNombre()=="typeof"):
+            tv.insert(parent='',index=cont,iid=cont,text='',values=(cont,funcion.getNombre(),"Funcion",funcion.getTipo(),"-","-",funcion.getFila(),funcion.getColumna()))
+            cont += 1
+    
+    pintar_texto()
+ 
 # Exportar errores
 def exportar_errores():
     archivo = "tablaErrores.dot"
@@ -328,23 +345,25 @@ compilarButton.grid(row=1,column=0,sticky="s")
 
 #Tabla De Simbolos
 tv=ttk.Treeview(frameEditors,height=7)
-tv['columns']=('#', 'Identificador', 'Tipo', 'Dimension', 'Valor', 'Ambito', 'Referencias')
+tv['columns']=('#','Identificador', 'Tipo_1', 'Tipo_2', 'Entorno', 'Valor', 'Linea', 'Columna')
 tv.column('#0', width=0, stretch=NO)
-tv.column('#', anchor=CENTER, width=10)
+tv.column('#', anchor=CENTER, width=20)
 tv.column('Identificador', anchor=CENTER, width=110)
-tv.column('Tipo', anchor=CENTER, width=80)
-tv.column('Dimension', anchor=CENTER, width=110)
+tv.column('Tipo_1', anchor=CENTER, width=80)
+tv.column('Tipo_2', anchor=CENTER, width=80)
+tv.column('Entorno', anchor=CENTER, width=110)
 tv.column('Valor', anchor=CENTER, width=80)
-tv.column('Ambito', anchor=CENTER, width=80)
-tv.column('Referencias', anchor=CENTER, width=110) 
+tv.column('Linea', anchor=CENTER, width=80)
+tv.column('Columna', anchor=CENTER, width=90) 
 tv.heading('#0', text='', anchor=CENTER)
 tv.heading('#', text='#', anchor=CENTER)
 tv.heading('Identificador', text='Identificador', anchor=CENTER)
-tv.heading('Tipo', text='Tipo', anchor=CENTER)
-tv.heading('Dimension', text='Dimension', anchor=CENTER)
+tv.heading('Tipo_1', text='Tipo', anchor=CENTER)
+tv.heading('Tipo_2', text='Tipo', anchor=CENTER)
+tv.heading('Entorno', text='Entorno', anchor=CENTER)
 tv.heading('Valor', text='Valor', anchor=CENTER)
-tv.heading('Ambito', text='Ambito', anchor=CENTER)
-tv.heading('Referencias', text='Referencias', anchor=CENTER)
+tv.heading('Linea', text='Linea', anchor=CENTER)
+tv.heading('Columna', text='Columna', anchor=CENTER)
 
 tv.grid(column=0, row=6,padx=25,sticky="w")
 

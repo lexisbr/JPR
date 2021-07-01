@@ -2,6 +2,8 @@ import re
 from TS.Excepcion import Excepcion
 
 errores = []
+simbolos=[]
+funciones=[]
 reservadas = {
     'int'   : 'RINT',
     'double' : 'RDOUBLE',
@@ -636,10 +638,20 @@ input = ''
 def getErrores():
     return errores
 
+def getSimbolos():
+    return simbolos
+
+def getFunciones():
+    return funciones 
+
 def parse(inp) :
     global errores
     global lexer
     global parser
+    global funciones
+    global simbolos
+    funciones = []
+    simbolos = []
     errores = []
     lexer = lex.lex(reflags= re.IGNORECASE)
     parser = yacc.yacc()
@@ -686,6 +698,8 @@ def interfaz(archivo):
     ast = Arbol(instrucciones)
     TSGlobal = TablaSimbolos()
     ast.setTSglobal(TSGlobal)
+    if (len(TSGlobal.getSimbolos())!=0):
+        TSGlobal.vaciarSimbolos()
     crearNativas(ast)
     
     for error in errores:                   #CAPTURA DE ERRORES LEXICOS Y SINTACTICOS
@@ -694,6 +708,7 @@ def interfaz(archivo):
 
     if ast.getInstrucciones()!=None:
         for instruccion in ast.getInstrucciones():      # 1ERA PASADA (DECLARACIONES Y ASIGNACIONES)
+            TSGlobal.setEntorno("Global")
             if isinstance(instruccion, Funcion):
                 ast.addFuncion(instruccion)     
             if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion):
@@ -719,6 +734,7 @@ def interfaz(archivo):
 
         contador = 0
         for instruccion in ast.getInstrucciones():      # 2DA PASADA (MAIN)
+            TSGlobal.setEntorno("Main")
             if isinstance(instruccion, Main):
                 contador += 1
                 if contador == 2: # VERIFICAR LA DUPLICIDAD
@@ -774,4 +790,10 @@ def interfaz(archivo):
         arch.close()
         os.system('dot -T pdf -o ast.pdf JPR/JPR_IDE/ast.dot')
 
+    for simbolo in TSGlobal.getSimbolos():
+        simbolos.append(simbolo)
+    for funcion in ast.getFunciones():
+        funciones.append(funcion)
+        
+    
     return ast.getConsola()

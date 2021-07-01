@@ -25,6 +25,7 @@ class If(Instruccion):
             if bool(condicion) == True:   # VERIFICA SI ES VERDADERA LA CONDICION
                 nuevaTabla = TablaSimbolos(table)       #NUEVO ENTORNO
                 for instruccion in self.instruccionesIf:
+                    nuevaTabla.setEntorno("If")
                     result = instruccion.interpretar(tree, nuevaTabla) #EJECUTA INSTRUCCION ADENTRO DEL IF
                     if isinstance(result, Excepcion) :
                         tree.getExcepciones().append(result)
@@ -36,6 +37,7 @@ class If(Instruccion):
                 if self.instruccionesElse != None:
                     nuevaTabla = TablaSimbolos(table)       #NUEVO ENTORNO
                     for instruccion in self.instruccionesElse:
+                        nuevaTabla.setEntorno("Else")
                         result = instruccion.interpretar(tree, nuevaTabla) #EJECUTA INSTRUCCION ADENTRO DEL IF
                         if isinstance(result, Excepcion) :
                             tree.getExcepciones().append(result)

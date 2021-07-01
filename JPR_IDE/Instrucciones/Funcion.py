@@ -1,10 +1,11 @@
-from Abstract.NodoAST import NodoAST
-from TS.Tipo import TIPO
-from Instrucciones.Return import Return
 from Abstract.Instruccion import Instruccion
+from Abstract.NodoAST import NodoAST
 from TS.Excepcion import Excepcion
 from TS.TablaSimbolos import TablaSimbolos
+from TS.Tipo import TIPO
+
 from Instrucciones.Break import Break
+from Instrucciones.Return import Return
 
 
 class Funcion(Instruccion):
@@ -19,6 +20,7 @@ class Funcion(Instruccion):
     def interpretar(self, tree, table):
         nuevaTabla = TablaSimbolos(table) 
         for instruccion in self.instrucciones:      # REALIZAR LAS ACCIONES
+            nuevaTabla.setEntorno("Funcion "+self.nombre)
             value = instruccion.interpretar(tree,nuevaTabla)
             if isinstance(value, Excepcion) :
                 tree.getExcepciones().append(value)
@@ -48,4 +50,22 @@ class Funcion(Instruccion):
         for instr in self.instrucciones:
             instrucciones.agregarHijoNodo(instr.getNodo())
         nodo.agregarHijoNodo(instrucciones)
-        return nodo 
+        return nodo
+    
+    def getNombre(self):
+        return self.nombre
+    
+    def getTipo(self):
+        return self.tipo  
+    
+    def getParametros(self):
+        return self.parametros 
+    
+    def getInstrucciones(self):
+        return self.instrucciones
+    
+    def getFila(self):
+        return self.fila
+    
+    def getColumna(self):
+        return self.columna

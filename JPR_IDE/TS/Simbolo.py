@@ -6,6 +6,7 @@ class Simbolo:
         self.fila = fila
         self.columna = columna
         self.valor = valor
+        self.entorno = None
 
     def getID(self):
         return self.id
@@ -30,3 +31,9 @@ class Simbolo:
     
     def getColumna(self):
         return self.columna
+    
+    def setEntorno(self, entorno):
+        self.entorno = entorno
+
+    def getEntorno(self):
+        return self.entorno

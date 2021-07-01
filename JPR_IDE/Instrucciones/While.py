@@ -23,6 +23,7 @@ class While(Instruccion):
                 if bool(condicion) == True:   # VERIFICA SI ES VERDADERA LA CONDICION
                     nuevaTabla = TablaSimbolos(table)       #NUEVO ENTORNO
                     for instruccion in self.instrucciones:
+                        nuevaTabla.setEntorno("While")
                         result = instruccion.interpretar(tree, nuevaTabla) #EJECUTA INSTRUCCION ADENTRO DEL IF
                         if isinstance(result, Excepcion) :
                             tree.getExcepciones().append(result)

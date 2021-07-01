@@ -16,6 +16,7 @@ class Main(Instruccion):
         nuevaTabla = TablaSimbolos(table) 
         listaerrores= []
         for instruccion in self.instrucciones:      # REALIZAR LAS ACCIONES
+            nuevaTabla.setEntorno("Main")
             value = instruccion.interpretar(tree,nuevaTabla)
             if isinstance(value, Excepcion) :
                 tree.getExcepciones().append(value)

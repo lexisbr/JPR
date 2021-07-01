@@ -22,6 +22,7 @@ class For(Instruccion):
         nuevaTable = None
         if isinstance(self.valor_inicial,Declaracion):
             nuevaTable = TablaSimbolos(table)
+            nuevaTable.setEntorno("For")
             valor_inicial = self.valor_inicial.interpretar(tree,nuevaTable)
             isDeclaracion = True
         else:
@@ -45,6 +46,7 @@ class For(Instruccion):
                         
 
                     for instruccion in self.instrucciones:
+                        nuevaTabla.setEntorno("For")
                         result = instruccion.interpretar(tree, nuevaTabla)  # EJECUTA INSTRUCCION ADENTRO DEL FOR
                         if isinstance(result, Excepcion):
                             tree.getExcepciones().append(result)
