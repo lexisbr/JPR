@@ -280,6 +280,40 @@ def exportar_errores():
         os.system('xdg-open imagen.jpg')
     else:
         os.startfile('imagen.jpg')
+        
+# Exportar ts
+def exportar_ts():
+    archivo = "tablaSimbolos.dot"
+    salida = "digraph simbolos {\n"
+    salida += "tbl [\n shape = plaintext\n"
+    salida += "label=<\n"
+    salida += "<table border=\"1\" cellborder=\"1\" cellspacing=\"1\" cellpadding=\"8\">\n"
+    salida += "<tr> <td colspan='5'>Tabla de Simbolos</td> </tr> \n"
+    salida += "<tr> <td>#</td> <td>Identificador</td> <td>Tipo</td> <td>Tipo</td> <td>Entorno</td> <td>Valor</td> <td>Linea</td> <td>Columna</td> </tr> \n"
+    simbolos = lista_simbolos()
+    funciones = lista_funciones()
+    cont = 1
+    for simbolo in simbolos:
+        salida += "<tr> <td>"+str(cont)+"</td> <td>"+simbolo.getID()+"</td> <td> Variable </td> <td>"+str(simbolo.getTipo())+"</td> <td>"+simbolo.getEntorno()+"</td> <td>"+str(simbolo.getValor())+"</td> <td>"+str(simbolo.getFila())+"</td> <td>"+str(simbolo.getColumna())+"</td> </tr> \n"
+        cont += 1
+        
+    for funcion in funciones:
+        if not(funcion.getNombre()=="round" or funcion.getNombre()=="toupper" or funcion.getNombre()=="tolower" or funcion.getNombre()=="length" or funcion.getNombre()=="truncate" or funcion.getNombre()=="typeof"):
+            salida += "<tr> <td>"+str(cont)+"</td> <td>"+funcion.getNombre()+"</td> <td> Funcion </td> <td>"+str(funcion.getTipo())+"</td> <td> - </td> <td> - </td> <td>"+str(funcion.getFila())+"</td> <td>"+str(funcion.getColumna())+"</td> </tr> \n"
+        
+    salida += "</table>\n"
+    salida += ">];\n"
+    salida += "}"
+    
+    with open(archivo,'w') as f:
+        f.write(salida) 
+    
+    os.system('dot -Tjpg '+archivo+' -o ts.jpg')
+    
+    if(platform.system() == "Linux"):
+        os.system('xdg-open ts.jpg')
+    else:
+        os.startfile('ts.jpg')
     
 #Exportar Arbol Sintactico
 def exportar_arbol():
@@ -326,7 +360,7 @@ menu.add_cascade(label='Archivo', menu=nuevoItem)
 reportesItem = Menu(menu,tearoff=0)
 reportesItem.add_command(label='Arbol Sintactico',command=exportar_arbol)
 reportesItem.add_command(label='Tabla de Errores',command=exportar_errores)
-reportesItem.add_command(label='Tabla de Simbolos',command=guardarArchivo)
+reportesItem.add_command(label='Tabla de Simbolos',command=exportar_ts)
 menu.add_cascade(label='Reportes', menu=reportesItem)
 root.config(menu=menu)
 #Titulo
