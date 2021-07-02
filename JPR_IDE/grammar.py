@@ -25,8 +25,7 @@ reservadas = {
     'return': 'RRETURN',
     'func': 'RFUNC',
     'read': 'RREAD',
-    'round': 'RROUND',
-    'typeof': 'RTYPEOF',
+    'new': 'RNEW',
     'main': 'RMAIN',
 }
 
@@ -36,6 +35,8 @@ tokens  = [
     'DOSPUNTOS',
     'PARA',
     'PARC',
+    'CORA',
+    'CORC',
     'MAS',
     'MENOS',
     'POR',
@@ -70,6 +71,8 @@ t_COMA          = r','
 t_DOSPUNTOS     = r':'
 t_PARA          = r'\('
 t_PARC          = r'\)'
+t_CORA          = r'\['
+t_CORC          = r'\]'
 t_MAS           = r'\+'
 t_MENOS         = r'-'
 t_POR           = r'\*'
@@ -235,6 +238,13 @@ from Expresiones.Read import Read
 from Expresiones.Casteo import Casteo
 from Nativas.Length import Length as LengthObj
 from Nativas.Truncate import Truncate as TruncateObj
+from Nativas.TypeOf import TypeOf 
+from Nativas.Round import Round 
+from Instrucciones.DeclaracionArr1 import DeclaracionArr1
+from Expresiones.AccesoArreglo import AccesoArreglo
+from Instrucciones.ModificarArreglo import ModificarArreglo
+
+
 def p_init(t) :
     'init            : instrucciones'
     t[0] = t[1]
@@ -272,6 +282,8 @@ def p_instruccion(t) :
                         | funcion_instr 
                         | llamada_instr finins 
                         | return_instr finins 
+                        | declArr_instr finins 
+                        | modArr_instr finins 
                         '''
     t[0] = t[1]
 
@@ -302,6 +314,59 @@ def p_declaracion(t) :
 def p_declaracion_nula(t) :
     'declaracion_instr2     : tipo ID'
     t[0] = Declaracion(t[1], t[2], t.lineno(2), find_column(input, t.slice[2]), None)
+
+
+#///////////////////////////////////////DECLARACION ARREGLOS//////////////////////////////////////////////////
+
+def p_declArr(t) :
+    '''declArr_instr     : tipo1'''
+    t[0] = t[1]
+
+def p_tipo1(t) :
+    '''tipo1     : tipo lista_Dim ID IGUAL RNEW tipo lista_expresiones'''
+    t[0] = DeclaracionArr1(t[1], t[2], t[3], t[6], t[7], t.lineno(3), find_column(input, t.slice[3]))
+
+def p_tipo2(t):
+    '''tipo2     : tipo lista_Dim ID IGUAL LLAVEA LLAVEC'''
+    t[0] = DeclaracionArr1(t[1], t[2], t[3], t[5], t.lineno(3), find_column(input, t.slice[3]))
+
+def p_lista_expresiones_arreglo2(t) :
+    '''lista_expresiones2     : lista_expresiones2 COMA expresion
+                                | lista_expresiones2 '''
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_lista_expresiones2_arreglo2(t) :
+    '''lista_expresiones2    : expresion'''
+    t[0] = [t[1]]
+
+def p_lista_Dim1(t) :
+    'lista_Dim     : lista_Dim CORA CORC'
+    t[0] = t[1] + 1
+
+def p_lista_Dim2(t) :
+    'lista_Dim    : CORA CORC'
+    t[0] = 1
+
+def p_lista_expresiones_1(t) :
+    'lista_expresiones     : lista_expresiones CORA expresion CORC'
+    t[1].append(t[3])
+    t[0] = t[1]
+
+def p_lista_expresiones_2(t) :
+    'lista_expresiones    : CORA expresion CORC'
+    t[0] = [t[2]]
+    
+
+
+#///////////////////////////////////////MODIFICACION ARREGLOS//////////////////////////////////////////////////
+
+
+def p_modArr(t) :
+    '''modArr_instr     :  ID lista_expresiones IGUAL expresion'''
+    t[0] = ModificarArreglo(t[1], t[2], t[4], t.lineno(1), find_column(input, t.slice[1]))
+
+
 
 #///////////////////////////////////////ASIGNACION//////////////////////////////////////////////////
 
@@ -489,7 +554,7 @@ def p_parametroLL(t) :
     'parametro_llamada     : expresion'
     t[0] = t[1]
     
-#///////////////////////////////////////LLAMADA A FUNCION//////////////////////////////////////////////////
+#///////////////////////////////////////RETURN//////////////////////////////////////////////////
 
 def p_return(t) :
     'return_instr     : RRETURN expresion'
@@ -629,6 +694,10 @@ def p_expresion_cast(t):
     '''expresion : PARA tipo PARC expresion'''
     t[0] = Casteo(t[2], t[4], t.lineno(1), find_column(input, t.slice[1]))
 
+def p_expresion_Arreglo(t):
+    '''expresion : ID lista_expresiones'''
+    t[0] = AccesoArreglo(t[1], t[2], t.lineno(1), find_column(input, t.slice[1]))
+
 
 import ply.yacc as yacc
 parser = yacc.yacc()
@@ -682,7 +751,19 @@ def crearNativas(ast):          # CREACION Y DECLARACION DE LAS FUNCIONES NATIVA
     parametros = [{'tipo':TIPO.DECIMAL,'identificador':'Truncate##Param1'}]
     instrucciones = []
     Truncate = TruncateObj(nombre, parametros, instrucciones, -1, -1)
-    ast.addFuncion(Truncate) 
+    ast.addFuncion(Truncate)
+    
+    nombre = "round"
+    parametros = [{'tipo':TIPO.DECIMAL,'identificador':'Round##Param1'}]
+    instrucciones = []
+    roundNumber = Round(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(roundNumber)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL)
+    
+    nombre = "typeof"
+    parametros = [{'tipo':TIPO.CADENA,'identificador':'Typeof##Param1'}]
+    instrucciones = []
+    typeof = TypeOf(nombre, parametros, instrucciones, -1, -1)
+    ast.addFuncion(typeof)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL) 
     
 
 
@@ -711,7 +792,7 @@ def interfaz(archivo):
             TSGlobal.setEntorno("Global")
             if isinstance(instruccion, Funcion):
                 ast.addFuncion(instruccion)     
-            if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion):
+            if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, DeclaracionArr1) or isinstance(instruccion, ModificarArreglo):
                 value = instruccion.interpretar(ast,TSGlobal)
                 if value !=None:
                     if isinstance(value, Excepcion) :
@@ -768,7 +849,7 @@ def interfaz(archivo):
                             errores.append(error)
             
         for instruccion in ast.getInstrucciones():    # 3ERA PASADA (SENTENCIAS FUERA DE MAIN)
-            if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, Funcion)):
+             if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, Funcion) or isinstance(instruccion, DeclaracionArr1) or isinstance(instruccion, ModificarArreglo)):
                 err = Excepcion("Semantico", "Sentencias fuera de Main", instruccion.fila, instruccion.columna)
                 ast.getExcepciones().append(err)
                 ast.updateConsola(err.toString())
