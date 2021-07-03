@@ -16,24 +16,27 @@ class AccesoArreglo(Instruccion):
 
 
     def interpretar(self, tree, table):
-        simbolo = table.getTabla(self.identificador.lower())
+        try:
+            simbolo = table.getTabla(self.identificador.lower())
 
-        if simbolo == None:
-            return Excepcion("Semantico", "Variable " + self.identificador + " no encontrada.", self.fila, self.columna)
+            if simbolo == None:
+                return Excepcion("Semantico", "Variable " + self.identificador + " no encontrada.", self.fila, self.columna)
 
-        self.tipo = simbolo.getTipo()
+            self.tipo = simbolo.getTipo()
 
-        if not simbolo.getArreglo(): 
-            return Excepcion("Semantico", "Variable " + self.identificador + " no es un arreglo.", self.fila, self.columna)
+            if not simbolo.getArreglo(): 
+                return Excepcion("Semantico", "Variable " + self.identificador + " no es un arreglo.", self.fila, self.columna)
 
 
-        # BUSQUEDA DEL ARREGLO
-        value = self.buscarDimensiones(tree, table, copy.copy(self.expresiones), simbolo.getValor())     #RETORNA EL VALOR SOLICITADO
-        if isinstance(value, Excepcion): return value
-        if isinstance(value, list):
-            return Excepcion("Semantico", "Acceso a Arreglo incompleto.", self.fila, self.columna)
+            # BUSQUEDA DEL ARREGLO
+            value = self.buscarDimensiones(tree, table, copy.copy(self.expresiones), simbolo.getValor())     #RETORNA EL VALOR SOLICITADO
+            if isinstance(value, Excepcion): return value
+            if isinstance(value, list):
+                return Excepcion("Semantico", "Acceso a Arreglo incompleto.", self.fila, self.columna)
 
-        return value
+            return value
+        except:
+            return Excepcion("Semantico", "El indice del array sobrepasa el rango.", self.fila, self.columna)
 
     def getNodo(self):
         nodo = NodoAST("ACCESO ARREGLO")

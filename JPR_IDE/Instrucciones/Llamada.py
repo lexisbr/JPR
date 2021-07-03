@@ -29,6 +29,14 @@ class Llamada(Instruccion):
 
                 if result.parametros[contador]['identificador'] == 'Truncate##Param1' or result.parametros[contador]['identificador']=='Round##Param1' or result.parametros[contador]['identificador']=='Typeof##Param1':
                     result.parametros[contador]['tipo'] = expresion.tipo
+                
+                try:
+                    simboloEncontrado = table.getTabla(expresion.identificador)
+                    if(simboloEncontrado.getArreglo() and (result.parametros[contador]['identificador']=='Length##Param1' or result.parametros[contador]['identificador']=='Typeof##Param1')):
+                        result.parametros[contador]['tipo'] = expresion.tipo
+                        self.arreglo=True
+                except:
+                    pass
                     
                 if result.parametros[contador]["tipo"] == expresion.tipo:  # VERIFICACION DE TIPO
                     # CREACION DE SIMBOLO E INGRESARLO A LA TABLA DE SIMBOLOS

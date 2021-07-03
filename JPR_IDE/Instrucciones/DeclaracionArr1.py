@@ -20,18 +20,22 @@ class DeclaracionArr1(Instruccion):
 
 
     def interpretar(self, tree, table):
-        if self.tipo != self.tipo2:                     #VERIFICACION DE TIPOS
-            return Excepcion("Semantico", "Tipo de dato diferente en Arreglo.", self.fila, self.columna)
-        if self.dimensiones != len(self.expresiones):   #VERIFICACION DE DIMENSIONES
-            return Excepcion("Semantico", "Dimensiones diferentes en Arreglo.", self.fila, self.columna)
+        try:
+            if self.tipo != self.tipo2:                     #VERIFICACION DE TIPOS
+                return Excepcion("Semantico", "Tipo de dato diferente en Arreglo.", self.fila, self.columna)
+            if self.dimensiones != len(self.expresiones):   #VERIFICACION DE DIMENSIONES
+                return Excepcion("Semantico", "Dimensiones diferentes en Arreglo.", self.fila, self.columna)
 
-        # CREACION DEL ARREGLO
-        value = self.crearDimensiones(tree, table, copy.copy(self.expresiones))     #RETORNA EL ARREGLO DE DIMENSIONES
-        if isinstance(value, Excepcion): return value
-        simbolo = Simbolo(str(self.identificador), self.tipo, self.arreglo, self.fila, self.columna, value)
-        result = table.setTabla(simbolo)
-        if isinstance(result, Excepcion): return result
-        return None
+            # CREACION DEL ARREGLO
+            value = self.crearDimensiones(tree, table, copy.copy(self.expresiones))     #RETORNA EL ARREGLO DE DIMENSIONES
+            if isinstance(value, Excepcion): return value
+            simbolo = Simbolo(str(self.identificador), self.tipo, self.arreglo, self.fila, self.columna, value)
+            result = table.setTabla(simbolo)
+            if isinstance(result, Excepcion): return result
+            return None
+        except:
+            return Excepcion("Semantico", "El indice del array sobrepasa el rango.", self.fila, self.columna)
+            
 
     def getNodo(self):
         nodo = NodoAST("DECLARACION ARREGLO")

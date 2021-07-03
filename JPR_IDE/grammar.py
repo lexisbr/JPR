@@ -1,5 +1,9 @@
 import re
 from TS.Excepcion import Excepcion
+import sys 
+
+sys.setrecursionlimit(3000)
+
 
 errores = []
 simbolos=[]
@@ -241,6 +245,7 @@ from Nativas.Truncate import Truncate as TruncateObj
 from Nativas.TypeOf import TypeOf 
 from Nativas.Round import Round 
 from Instrucciones.DeclaracionArr1 import DeclaracionArr1
+from Instrucciones.ReferenciaArreglo import ReferenciaArreglo
 from Expresiones.AccesoArreglo import AccesoArreglo
 from Instrucciones.ModificarArreglo import ModificarArreglo
 
@@ -319,26 +324,17 @@ def p_declaracion_nula(t) :
 #///////////////////////////////////////DECLARACION ARREGLOS//////////////////////////////////////////////////
 
 def p_declArr(t) :
-    '''declArr_instr     : tipo1'''
+    '''declArr_instr     : tipo1
+                        | array_referencia '''
     t[0] = t[1]
 
 def p_tipo1(t) :
-    '''tipo1     : tipo lista_Dim ID IGUAL RNEW tipo lista_expresiones'''
+    'tipo1     : tipo lista_Dim ID IGUAL RNEW tipo lista_expresiones'
     t[0] = DeclaracionArr1(t[1], t[2], t[3], t[6], t[7], t.lineno(3), find_column(input, t.slice[3]))
 
-def p_tipo2(t):
-    '''tipo2     : tipo lista_Dim ID IGUAL LLAVEA LLAVEC'''
-    t[0] = DeclaracionArr1(t[1], t[2], t[3], t[5], t.lineno(3), find_column(input, t.slice[3]))
-
-def p_lista_expresiones_arreglo2(t) :
-    '''lista_expresiones2     : lista_expresiones2 COMA expresion
-                                | lista_expresiones2 '''
-    t[1].append(t[3])
-    t[0] = t[1]
-
-def p_lista_expresiones2_arreglo2(t) :
-    '''lista_expresiones2    : expresion'''
-    t[0] = [t[1]]
+def p_arrayReferencia(t):
+    'array_referencia   : tipo lista_Dim ID IGUAL ID'
+    t[0] = ReferenciaArreglo(t[1],t[2],t[3],t[5],t.lineno(3), find_column(input, t.slice[3]))
 
 def p_lista_Dim1(t) :
     'lista_Dim     : lista_Dim CORA CORC'
@@ -361,11 +357,9 @@ def p_lista_expresiones_2(t) :
 
 #///////////////////////////////////////MODIFICACION ARREGLOS//////////////////////////////////////////////////
 
-
 def p_modArr(t) :
     '''modArr_instr     :  ID lista_expresiones IGUAL expresion'''
     t[0] = ModificarArreglo(t[1], t[2], t[4], t.lineno(1), find_column(input, t.slice[1]))
-
 
 
 #///////////////////////////////////////ASIGNACION//////////////////////////////////////////////////

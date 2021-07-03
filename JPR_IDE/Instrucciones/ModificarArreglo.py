@@ -48,23 +48,27 @@ class ModificarArreglo(Instruccion):
         return nodo
 
     def modificarDimensiones(self, tree, table, expresiones, arreglo, valor):
-        if len(expresiones) == 0:
-            if isinstance(arreglo, list):
-                return Excepcion("Semantico", "Modificacion a Arreglo incompleto.", self.fila, self.columna)
-            return valor
-        if not isinstance(arreglo, list):
-            return Excepcion("Semantico", "Accesos de más en un Arreglo.", self.fila, self.columna)
-        dimension = expresiones.pop(0)
-        num = dimension.interpretar(tree, table)
-        if isinstance(num, Excepcion): return num
-        if dimension.tipo != TIPO.ENTERO:
-            return Excepcion("Semantico", "Expresion diferente a ENTERO en Arreglo.", self.fila, self.columna)
+        try:
+            if len(expresiones) == 0:
+                if isinstance(arreglo, list):
+                    return Excepcion("Semantico", "Modificacion a Arreglo incompleto.", self.fila, self.columna)
+                return valor
+            if not isinstance(arreglo, list):
+                return Excepcion("Semantico", "Accesos de más en un Arreglo.", self.fila, self.columna)
+            dimension = expresiones.pop(0)
+            num = dimension.interpretar(tree, table)
+            if isinstance(num, Excepcion): return num
+            if dimension.tipo != TIPO.ENTERO:
+                return Excepcion("Semantico", "Expresion diferente a ENTERO en Arreglo.", self.fila, self.columna)
 
-        value = self.modificarDimensiones(tree, table, copy.copy(expresiones), arreglo[num], valor)
-        if isinstance(value, Excepcion): return value
-        if value != None:
-            arreglo[num] = value
+            value = self.modificarDimensiones(tree, table, copy.copy(expresiones), arreglo[num], valor)
+            if isinstance(value, Excepcion): return value
+            if value != None:
+                arreglo[num] = value
 
-        return None
+            return None
+        except: 
+            return Excepcion("Semantico", "El indice del array sobrepasa el rango.", self.fila, self.columna)
+            
 
 

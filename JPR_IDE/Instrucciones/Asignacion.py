@@ -14,9 +14,9 @@ class Asignacion(Instruccion):
         
     def interpretar(self, tree, table):
         if(self.expresion=='++'):
-            simbolo = Simbolo(self.identificador, OperadorAritmetico.INCREMENTO, self.fila, self.columna, 1)
+            simbolo = Simbolo(self.identificador, OperadorAritmetico.INCREMENTO, self.arreglo, self.fila, self.columna, 1)
         elif(self.expresion=='--'):
-            simbolo = Simbolo(self.identificador, OperadorAritmetico.DECREMENTO, self.fila, self.columna, -1)
+            simbolo = Simbolo(self.identificador, OperadorAritmetico.DECREMENTO, self.arreglo, self.fila, self.columna, -1)
         else:    
             value = self.expresion.interpretar(tree, table) # Valor a asignar a la variable
             if isinstance(value, Excepcion): return value

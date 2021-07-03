@@ -41,3 +41,4 @@ class Simbolo:
     
     def getArreglo(self):
         return self.arreglo
+    
