@@ -1,10 +1,11 @@
 import re
+import io
 from TS.Excepcion import Excepcion
-import sys 
+import sys
 
 sys.setrecursionlimit(3000)
 
-
+readConsola = ""
 errores = []
 simbolos=[]
 funciones=[]
@@ -119,9 +120,9 @@ def t_ENTERO(t):
 def t_BOOLEANO(t):
     r'true|false'
     try:
-        if t.value=='true':
+        if t.value.lower() == 'true':
             t.value=True
-        elif t.value=='false':
+        elif t.value.lower() == 'false':
             t.value=False
     except ValueError:
         t.value = 0
@@ -245,6 +246,7 @@ from Nativas.Truncate import Truncate as TruncateObj
 from Nativas.TypeOf import TypeOf 
 from Nativas.Round import Round 
 from Instrucciones.DeclaracionArr1 import DeclaracionArr1
+from Instrucciones.DeclaracionArr2 import DeclaracionArr2
 from Instrucciones.ReferenciaArreglo import ReferenciaArreglo
 from Expresiones.AccesoArreglo import AccesoArreglo
 from Instrucciones.ModificarArreglo import ModificarArreglo
@@ -325,10 +327,11 @@ def p_declaracion_nula(t) :
 
 def p_declArr(t) :
     '''declArr_instr     : tipo1
+                        | tipo2
                         | array_referencia '''
     t[0] = t[1]
 
-def p_tipo1(t) :
+def p_tipo1_arreglo(t) :
     'tipo1     : tipo lista_Dim ID IGUAL RNEW tipo lista_expresiones'
     t[0] = DeclaracionArr1(t[1], t[2], t[3], t[6], t[7], t.lineno(3), find_column(input, t.slice[3]))
 
@@ -353,7 +356,44 @@ def p_lista_expresiones_2(t) :
     'lista_expresiones    : CORA expresion CORC'
     t[0] = [t[2]]
     
+#///////////////////////////////////////DECLARACIO ARREGLOS TIPO 2//////////////////////////////////////////////////
 
+def p_tipo2_arreglo(t):
+    ' tipo2 : tipo lista_Dim ID IGUAL lst_values '
+    t[0] = DeclaracionArr2(t[1],t[2],t[3],t[5],t.lineno(4), find_column(input, t.slice[4]))
+    
+def p_lst_values(t) :
+    ' lst_values    :  lst_values COMA LLAVEA value LLAVEC '
+    if t[4] != "":
+        t[1].append(t[4])
+    t[0] = t[1]
+
+def p_lst_value(t) :
+    ' lst_values    : LLAVEA value LLAVEC '
+    if t[2] == "":
+        t[0] = []
+    else:
+        t[0] = [t[2]]
+
+def p_value(t):
+    '''
+    value :  lst_values
+            | lst_expresion
+    '''
+    t[0] = t[1]
+    
+def p_lst_values_expresio(t) :
+    ' lst_expresion    : lst_expresion COMA expresion '
+    if t[3] != "":
+        t[1].append(t[3])
+    t[0] = t[1]
+
+def p_lst_value_expresion_final(t) :
+    ' lst_expresion    : expresion '
+    if t[1] == "":
+        t[0] = []
+    else:
+        t[0] = [t[1]]
 
 #///////////////////////////////////////MODIFICACION ARREGLOS//////////////////////////////////////////////////
 
@@ -484,7 +524,6 @@ def p_break(t) :
 
 def p_continue(t) :
     'continue_instr     : RCONTINUE'
-    print(">>> continue")
     t[0] = Continue(t.lineno(1), find_column(input, t.slice[1]))
 
 
@@ -520,6 +559,10 @@ def p_parametros_2(t) :
 def p_parametro(t) :
     'parametro     : tipo ID'
     t[0] = {'tipo':t[1],'identificador':t[2]}
+    
+def p_parametro_arreglo(t) :
+    'parametro     : tipo lista_Dim ID'
+    t[0] = {'tipo':TIPO.ARREGLO,'identificador':t[3],'tipo dato':t[1],'longitud':t[2]}
         
 #///////////////////////////////////////LLAMADA A FUNCION//////////////////////////////////////////////////
 
@@ -760,17 +803,15 @@ def crearNativas(ast):          # CREACION Y DECLARACION DE LAS FUNCIONES NATIVA
     ast.addFuncion(typeof)     # GUARDAR LA FUNCION EN "MEMORIA" (EN EL ARBOL) 
     
 
-
 #INTERFAZ
-
-def interfaz(archivo):
+def interfaz(archivo,console_view):
     entrada = archivo
 
     from TS.Arbol import Arbol
     from TS.TablaSimbolos import TablaSimbolos
 
     instrucciones = parse(entrada) #ARBOL AST
-    ast = Arbol(instrucciones)
+    ast = Arbol(instrucciones,console_view)
     TSGlobal = TablaSimbolos()
     ast.setTSglobal(TSGlobal)
     if (len(TSGlobal.getSimbolos())!=0):
@@ -786,7 +827,7 @@ def interfaz(archivo):
             TSGlobal.setEntorno("Global")
             if isinstance(instruccion, Funcion):
                 ast.addFuncion(instruccion)     
-            if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, DeclaracionArr1) or isinstance(instruccion, ModificarArreglo):
+            if isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, DeclaracionArr1) or isinstance(instruccion, DeclaracionArr2) or isinstance(instruccion, ModificarArreglo) or isinstance(instruccion, ReferenciaArreglo):
                 value = instruccion.interpretar(ast,TSGlobal)
                 if value !=None:
                     if isinstance(value, Excepcion) :
@@ -843,7 +884,7 @@ def interfaz(archivo):
                             errores.append(error)
             
         for instruccion in ast.getInstrucciones():    # 3ERA PASADA (SENTENCIAS FUERA DE MAIN)
-             if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, Funcion) or isinstance(instruccion, DeclaracionArr1) or isinstance(instruccion, ModificarArreglo)):
+             if not (isinstance(instruccion, Main) or isinstance(instruccion, Declaracion) or isinstance(instruccion, Asignacion) or isinstance(instruccion, Funcion) or isinstance(instruccion, DeclaracionArr1) or isinstance(instruccion, DeclaracionArr2) or isinstance(instruccion, ModificarArreglo) or isinstance(instruccion, ReferenciaArreglo) ):
                 err = Excepcion("Semantico", "Sentencias fuera de Main", instruccion.fila, instruccion.columna)
                 ast.getExcepciones().append(err)
                 ast.updateConsola(err.toString())
@@ -860,7 +901,7 @@ def interfaz(archivo):
 
         dirname = os.path.dirname(__file__)
         direcc = os.path.join(dirname, 'ast.dot')
-        arch = open(direcc, "w+")
+        arch = io.open(direcc, "w+", encoding='utf8')
         arch.write(grafo)
         arch.close()
         os.system('dot -T pdf -o ast.pdf JPR/JPR_IDE/ast.dot')

@@ -4,7 +4,9 @@ from Instrucciones.Funcion import Funcion
 from Abstract.Instruccion import Instruccion
 from TS.Excepcion import Excepcion
 from TS.TablaSimbolos import TablaSimbolos
+from TS.Tipo import TIPO
 from Instrucciones.Break import Break
+import copy
 
 
 class Llamada(Instruccion):
@@ -38,9 +40,14 @@ class Llamada(Instruccion):
                 except:
                     pass
                     
-                if result.parametros[contador]["tipo"] == expresion.tipo:  # VERIFICACION DE TIPO
+                if result.parametros[contador]["tipo"] == expresion.tipo or result.parametros[contador]["tipo"]==TIPO.ARREGLO:  # VERIFICACION DE TIPO
                     # CREACION DE SIMBOLO E INGRESARLO A LA TABLA DE SIMBOLOS
-                    simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.arreglo, self.fila, self.columna, resultExpresion)
+                    if result.parametros[contador]["tipo"]==TIPO.ARREGLO:
+                        resultExpresion=copy.copy(resultExpresion)
+                        self.arreglo=True    
+                        simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, self.arreglo, self.fila, self.columna, resultExpresion)
+                    else:
+                        simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), result.parametros[contador]['tipo'], self.arreglo, self.fila, self.columna, resultExpresion) 
                     resultTabla = nuevaTabla.setTabla(simbolo)
                     if isinstance(resultTabla, Excepcion): return resultTabla
 

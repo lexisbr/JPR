@@ -2,6 +2,7 @@
 import os
 import platform
 import re
+import io
 from tkinter import filedialog
 import tkinter as tk
 from tkinter import ttk
@@ -12,7 +13,6 @@ from grammar import interfaz as compilar
 from grammar import getErrores as lista_errores
 from grammar import getSimbolos as lista_simbolos
 from grammar import getFunciones as lista_funciones
-
 # Metodos
 
 # Recorrer el texto para separar palabras por colores
@@ -181,15 +181,16 @@ archivo=""
 def abrir():       
     global archivo
     archivo = filedialog.askopenfilename(title = "Abrir Archivo", initialdir = "C:/",filetypes=[("jpr files", ".jpr")])
-    entrada = open(archivo)
-    content = entrada.read()
-    entradaTxt.delete(1.0, END)
-    for s in recorrerInput(content):
-        entradaTxt.insert(INSERT, s[1], s[0])
-    entrada.close()
-    lineas()
-    archivoLbl.config(text = archivo)
-    consoleTxt.delete(1.0, END)
+    if(archivo):
+        entrada = io.open(archivo,'r',encoding="utf8")
+        content = entrada.read()
+        entradaTxt.delete(1.0, END)
+        for s in recorrerInput(content):
+            entradaTxt.insert(INSERT, s[1], s[0])
+        entrada.close()
+        lineas()
+        archivoLbl.config(text = archivo)
+        consoleTxt.delete(1.0, END)
 
 
 #Nuevo archivo
@@ -228,7 +229,7 @@ def guardarComo():      #GUARDAR COMO
 #Compilacion
 def compilar_archivo():
     consoleTxt.delete(1.0, END)
-    contenido = compilar(entradaTxt.get(1.0, END))
+    contenido = compilar(entradaTxt.get(1.0, END),consoleTxt)
     consoleTxt.insert(INSERT,contenido)
     excepciones = lista_errores()
     simbolos = lista_simbolos()
@@ -318,7 +319,10 @@ def exportar_ts():
 #Exportar Arbol Sintactico
 def exportar_arbol():
     os.system('xdg-open ast.pdf')
-    
+
+def agregar_texto(contenido):
+    consoleTxt.insert(INSERT,contenido)
+
 # Declaracion del tk
 root = Tk()
 root.title("JPR Editor")
@@ -438,7 +442,10 @@ entradaTxt.tag_config('numero', foreground='purple2')
 entradaTxt.tag_config('comentario', foreground='gray')
 entradaTxt.tag_config('normal', foreground='green2')
 
+def main():
+    root.mainloop()
 
-# Main loop
-root.mainloop()
 
+
+if __name__ == "__main__":
+    main ()

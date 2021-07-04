@@ -1,5 +1,7 @@
+import tkinter
+
 class Arbol:
-    def __init__(self, instrucciones ):
+    def __init__(self, instrucciones, console_view):
         self.instrucciones = instrucciones
         self.funciones = []
         self.excepciones = []
@@ -7,6 +9,7 @@ class Arbol:
         self.TSglobal = None
         self.dot = ""
         self.contador = 0
+        self.console_view = console_view
 
     def getInstrucciones(self):
         return self.instrucciones
@@ -27,7 +30,11 @@ class Arbol:
         self.consola = consola
 
     def updateConsola(self,cadena):
-        self.consola += str(cadena) + '\n'
+        #self.consola += str(cadena) + '\n'
+        self.console_view.insert(tkinter.INSERT,str(cadena)+"\n")
+
+    def getConsoleView(self):
+        return self.console_view
 
     def getTSGlobal(self):
         return self.TSglobal

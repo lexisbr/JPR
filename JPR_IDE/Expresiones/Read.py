@@ -10,7 +10,7 @@ class Read(Instruccion):
         self.tipo = TIPO.CADENA
 
     def interpretar(self, tree, table):
-        lectura = self.messageBox("Ingrese el valor del read") 
+        lectura = self.messageBox("Ingrese el valor del read")
         return lectura
 
     def getNodo(self):
@@ -29,3 +29,5 @@ class Read(Instruccion):
         root.wait_window()
         value = var.get()
         return value
+    
+   

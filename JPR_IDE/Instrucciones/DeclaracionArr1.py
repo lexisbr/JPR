@@ -10,7 +10,7 @@ import copy
 class DeclaracionArr1(Instruccion):
     def __init__(self, tipo1, dimensiones, identificador, tipo2, expresiones, fila, columna):
         self.identificador = identificador
-        self.tipo = tipo1
+        self.tipo1 = tipo1
         self.tipo2 = tipo2
         self.dimensiones = dimensiones
         self.expresiones = expresiones
@@ -21,7 +21,7 @@ class DeclaracionArr1(Instruccion):
 
     def interpretar(self, tree, table):
         try:
-            if self.tipo != self.tipo2:                     #VERIFICACION DE TIPOS
+            if self.tipo1 != self.tipo2:                     #VERIFICACION DE TIPOS
                 return Excepcion("Semantico", "Tipo de dato diferente en Arreglo.", self.fila, self.columna)
             if self.dimensiones != len(self.expresiones):   #VERIFICACION DE DIMENSIONES
                 return Excepcion("Semantico", "Dimensiones diferentes en Arreglo.", self.fila, self.columna)
@@ -29,7 +29,7 @@ class DeclaracionArr1(Instruccion):
             # CREACION DEL ARREGLO
             value = self.crearDimensiones(tree, table, copy.copy(self.expresiones))     #RETORNA EL ARREGLO DE DIMENSIONES
             if isinstance(value, Excepcion): return value
-            simbolo = Simbolo(str(self.identificador), self.tipo, self.arreglo, self.fila, self.columna, value)
+            simbolo = Simbolo(str(self.identificador), self.tipo1, self.arreglo, self.fila, self.columna, value)
             result = table.setTabla(simbolo)
             if isinstance(result, Excepcion): return result
             return None
@@ -39,7 +39,7 @@ class DeclaracionArr1(Instruccion):
 
     def getNodo(self):
         nodo = NodoAST("DECLARACION ARREGLO")
-        nodo.agregarHijo(str(self.tipo))
+        nodo.agregarHijo(str(self.tipo1))
         nodo.agregarHijo(str(self.dimensiones))
         nodo.agregarHijo(str(self.identificador))
         nodo.agregarHijo(str(self.tipo2))
