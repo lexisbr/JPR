@@ -30,7 +30,7 @@ class Arbol:
         self.consola = consola
 
     def updateConsola(self,cadena):
-        #self.consola += str(cadena) + '\n'
+        self.consola += str(cadena) + '\n'
         self.console_view.insert(tkinter.INSERT,str(cadena)+"\n")
 
     def getConsoleView(self):
