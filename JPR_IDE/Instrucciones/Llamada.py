@@ -29,7 +29,7 @@ class Llamada(Instruccion):
                 resultExpresion = expresion.interpretar(tree, table)
                 if isinstance(resultExpresion, Excepcion): return resultExpresion
 
-                if result.parametros[contador]['identificador'] == 'Truncate##Param1' or result.parametros[contador]['identificador']=='Round##Param1' or result.parametros[contador]['identificador']=='Typeof##Param1':
+                if result.parametros[contador]['identificador'] == 'Truncate##Param1' or result.parametros[contador]['identificador']=='Round##Param1' or result.parametros[contador]['identificador']=='Typeof##Param1' or result.parametros[contador]['identificador']=='Length##Param1':
                     result.parametros[contador]['tipo'] = expresion.tipo
                 
                 try:
@@ -43,7 +43,6 @@ class Llamada(Instruccion):
                 if result.parametros[contador]["tipo"] == expresion.tipo or result.parametros[contador]["tipo"]==TIPO.ARREGLO:  # VERIFICACION DE TIPO
                     # CREACION DE SIMBOLO E INGRESARLO A LA TABLA DE SIMBOLOS
                     if result.parametros[contador]["tipo"]==TIPO.ARREGLO:
-                        resultExpresion=copy.copy(resultExpresion)
                         self.arreglo=True    
                         simbolo = Simbolo(str(result.parametros[contador]['identificador']).lower(), expresion.tipo, self.arreglo, self.fila, self.columna, resultExpresion)
                     else:

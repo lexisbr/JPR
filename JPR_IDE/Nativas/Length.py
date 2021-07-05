@@ -30,6 +30,7 @@ class Length(Funcion):
             return len(simbolo.getValor()) 
 
     def getLength(self, expresiones):
+        self.length = 0
         for expresion in expresiones:
             if(isinstance(expresion,list)):
                 self.getLength(expresion)
