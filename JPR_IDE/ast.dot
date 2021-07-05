@@ -858,7 +858,7 @@ n428[label="DECLARACION ARREGLO"];
 n78->n428;
 n429[label="TIPO.ENTERO"];
 n428->n429;
-n430[label="<bound method DeclaracionArr2.dimensiones of <Instrucciones.DeclaracionArr2.DeclaracionArr2 object at 0x7f7c078a98e0>>"];
+n430[label="<bound method DeclaracionArr2.dimensiones of <Instrucciones.DeclaracionArr2.DeclaracionArr2 object at 0x7f784f6f5a60>>"];
 n428->n430;
 n431[label="ArregloCubo"];
 n428->n431;

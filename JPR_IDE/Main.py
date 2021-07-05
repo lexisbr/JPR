@@ -230,7 +230,7 @@ def guardarComo():      #GUARDAR COMO
 def compilar_archivo():
     consoleTxt.delete(1.0, END)
     contenido = compilar(entradaTxt.get(1.0, END),consoleTxt)
-    consoleTxt.insert(INSERT,contenido)
+    #consoleTxt.insert(INSERT,contenido)
     excepciones = lista_errores()
     simbolos = lista_simbolos()
     funciones = lista_funciones()
@@ -295,12 +295,12 @@ def exportar_ts():
     funciones = lista_funciones()
     cont = 1
     for simbolo in simbolos:
-        salida += "<tr> <td>"+str(cont)+"</td> <td>"+simbolo.getID()+"</td> <td> Variable </td> <td>"+str(simbolo.getTipo())+"</td> <td>"+simbolo.getEntorno()+"</td> <td>"+str(simbolo.getValor())+"</td> <td>"+str(simbolo.getFila())+"</td> <td>"+str(simbolo.getColumna())+"</td> </tr> \n"
+        salida += "<tr> <td> \""+str(cont)+"\" </td> <td> \""+simbolo.getID()+"\" </td> <td> \"Variable\" </td> <td> \""+str(simbolo.getTipo())+"\" </td> <td> \""+simbolo.getEntorno()+"\" </td> <td> \""+str(simbolo.getValor())+"\" </td> <td> \""+str(simbolo.getFila())+"\" </td> <td> \""+str(simbolo.getColumna())+"\" </td> </tr> \n"
         cont += 1
         
     for funcion in funciones:
         if not(funcion.getNombre()=="round" or funcion.getNombre()=="toupper" or funcion.getNombre()=="tolower" or funcion.getNombre()=="length" or funcion.getNombre()=="truncate" or funcion.getNombre()=="typeof"):
-            salida += "<tr> <td>"+str(cont)+"</td> <td>"+funcion.getNombre()+"</td> <td> Funcion </td> <td>"+str(funcion.getTipo())+"</td> <td> - </td> <td> - </td> <td>"+str(funcion.getFila())+"</td> <td>"+str(funcion.getColumna())+"</td> </tr> \n"
+            salida += "<tr> <td> \""+str(cont)+"\" </td> <td> \""+funcion.getNombre()+"\" </td> <td> \"Funcion\" </td> <td> \""+str(funcion.getTipo())+"\" </td> <td> - </td> <td> - </td> <td> \""+str(funcion.getFila())+"\" </td> <td> \""+str(funcion.getColumna())+"\" </td> </tr> \n"
         
     salida += "</table>\n"
     salida += ">];\n"
